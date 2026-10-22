@@ -1,0 +1,58 @@
+{
+  "id": "./",
+  "name": "Meu Look Fashion",
+  "short_name": "Meu Look",
+  "description": "Jogo de vestir boneca com 31 peças, estúdio de fotos, cores de cabelo e sons.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff7fb",
+  "theme_color": "#f7d4e6",
+  "categories": ["games", "entertainment", "lifestyle"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "look-final.png",
+      "sizes": "430x880",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Meu Look Fashion com o look montado"
+    },
+    {
+      "src": "photo-final.png",
+      "sizes": "430x880",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Estúdio de fotos do jogo"
+    }
+  ]
+}

@@ -1,0 +1,4941 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f7d4e6" />
+<meta name="description" content="Meu Look Fashion: jogo de vestir boneca com 31 peças, estúdio de fotos, cores de cabelo e sons." />
+<meta name="application-name" content="Meu Look Fashion" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Meu Look" />
+<title>Meu Look Fashion</title>
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23a72f63'/%3E%3Cpath d='M32 9c1.4 12.4 6.2 17.2 18.6 18.6C38.2 29.1 33.4 33.9 32 46.3 30.6 33.9 25.8 29.1 13.4 27.6 25.8 26.2 30.6 21.4 32 9Z' fill='%23ffd5e7'/%3E%3C/svg%3E" />
+<style>
+  *,
+  *::before,
+  *::after { box-sizing: border-box; }
+
+  :root {
+    --ink: #47243a;
+    --ink-soft: #7b5369;
+    --ink-faint: #a0788e;
+    --rose: #d64f88;
+    --rose-deep: #a72f63;
+    --rose-soft: #f7c3d8;
+    --pink: #ffdcea;
+    --pink-light: #fff3f8;
+    --lilac: #c7a6ef;
+    --lilac-deep: #8651bb;
+    --gold: #d6a341;
+    --gold-soft: #f8e5ad;
+    --cream: #fffafc;
+    --line: rgba(126, 57, 91, 0.13);
+    --shadow-soft: 0 12px 30px rgba(104, 43, 73, 0.12);
+    --shadow-card: 0 8px 20px rgba(110, 48, 80, 0.1);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: #f6cfe1;
+  }
+
+  body {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", "Trebuchet MS", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    background:
+      radial-gradient(1100px 680px at 12% -12%, rgba(255, 236, 246, 0.98), transparent 58%),
+      radial-gradient(900px 700px at 104% 8%, rgba(228, 209, 249, 0.92), transparent 55%),
+      radial-gradient(900px 720px at 50% 112%, rgba(255, 197, 220, 0.95), transparent 62%),
+      #f6cfe1;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    border: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:disabled {
+    cursor: default;
+    opacity: 0.42;
+  }
+
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid rgba(134, 81, 187, 0.85);
+    outline-offset: 2px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .icon-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .ic {
+    width: 21px;
+    height: 21px;
+    display: block;
+    flex: 0 0 auto;
+  }
+
+  #game {
+    position: relative;
+    width: min(100%, 460px);
+    height: 100vh;
+    height: 100dvh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(120% 55% at 50% -8%, rgba(255, 255, 255, 0.95), transparent 62%),
+      linear-gradient(180deg, #fff9fc 0%, #fdeef6 43%, #f7dbea 100%);
+    box-shadow: 0 0 90px rgba(90, 33, 64, 0.21);
+  }
+
+  .ambient {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .ambient::before,
+  .ambient::after {
+    content: "";
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    filter: blur(4px);
+    opacity: 0.6;
+  }
+
+  .ambient::before {
+    top: 16%;
+    left: -150px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.92), transparent 68%);
+  }
+
+  .ambient::after {
+    top: 46%;
+    right: -170px;
+    background: radial-gradient(circle, rgba(203, 168, 240, 0.38), transparent 68%);
+  }
+
+  .ambient-spark {
+    position: absolute;
+    display: block;
+    color: rgba(255, 255, 255, 0.92);
+    filter: drop-shadow(0 2px 9px rgba(223, 118, 166, 0.45));
+    animation: float-spark 7.5s ease-in-out infinite, twinkle 4.4s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .ambient-spark svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ambient-spark.s1 { width: 13px; height: 13px; top: 8%; left: 7%; animation-delay: -1s, -2s; }
+  .ambient-spark.s2 { width: 8px; height: 8px; top: 17%; right: 8%; animation-delay: -3s, -0.7s; color: #f6d78e; }
+  .ambient-spark.s3 { width: 11px; height: 11px; top: 40%; left: 92%; animation-delay: -5s, -2.4s; }
+  .ambient-spark.s4 { width: 9px; height: 9px; top: 56%; left: 4%; animation-delay: -2s, -3.2s; color: #f5c6dd; }
+  .ambient-spark.s5 { width: 12px; height: 12px; top: 71%; right: 4%; animation-delay: -6s, -1.3s; }
+  .ambient-spark.s6 { width: 7px; height: 7px; top: 33%; left: 5%; animation-delay: -4.4s, -4s; color: #f0d395; }
+
+  @keyframes float-spark {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(0.92); }
+    50% { transform: translate3d(5px, -13px, 0) rotate(12deg) scale(1.08); }
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.95; }
+  }
+
+  .topbar {
+    position: relative;
+    z-index: 3;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: max(10px, var(--safe-top)) 16px 4px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .brand-mark {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    border-radius: 15px;
+    color: #ffe3ef;
+    background:
+      linear-gradient(145deg, rgba(255, 255, 255, 0.22), transparent 48%),
+      linear-gradient(140deg, #b93c74, #702b75);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 18px rgba(135, 45, 92, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+
+  .brand-mark .ic {
+    width: 22px;
+    height: 22px;
+  }
+
+  .brand-mark::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 11px;
+  }
+
+  .brand-copy {
+    min-width: 0;
+  }
+
+  .eyebrow {
+    margin: 0 0 1px;
+    color: var(--ink-faint);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-family: "Bodoni 72", "Didot", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-size: clamp(22px, 6.1vw, 27px);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+
+  .title-star {
+    width: 9px;
+    height: 9px;
+    flex: 0 0 auto;
+    color: var(--gold);
+    filter: drop-shadow(0 1px 3px rgba(214, 163, 65, 0.4));
+    animation: twinkle 4.5s ease-in-out infinite;
+  }
+
+  h1 .title-main {
+    background: linear-gradient(112deg, #4b263d 4%, #8c3167 70%, #a23a6e 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  h1 .fashion {
+    font-style: italic;
+    font-weight: 500;
+    background: linear-gradient(112deg, #c33f78 8%, #a44191 58%, #7952b8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+  }
+
+  .icon-button {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+    color: var(--ink-soft);
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.94);
+    box-shadow: 0 6px 16px rgba(110, 48, 80, 0.11), inset 0 1px 0 #fff;
+    transition: transform 150ms ease, background-color 150ms ease;
+    touch-action: manipulation;
+  }
+
+  .icon-button:active { transform: scale(0.94); background: #fff; }
+  .icon-button:hover { background: #fff; }
+  .icon-button .ic { width: 20px; height: 20px; }
+
+  .actionbar {
+    position: relative;
+    z-index: 3;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 14px 6px;
+  }
+
+  .look-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 46px;
+    padding: 5px 13px 5px 7px;
+    border-radius: 16px;
+    background: linear-gradient(150deg, #ffffff, #fff4f9);
+    border: 1px solid rgba(255, 255, 255, 0.98);
+    box-shadow: 0 6px 18px rgba(109, 46, 79, 0.1), inset 0 1px 0 #fff;
+    flex: 1 1 auto;
+    min-width: 82px;
+    transition: box-shadow 220ms ease, border-color 220ms ease;
+  }
+
+  .look-pill.is-complete {
+    border-color: rgba(214, 163, 65, 0.55);
+    box-shadow: 0 0 0 2px rgba(214, 163, 65, 0.16), 0 7px 20px rgba(130, 87, 28, 0.13), inset 0 1px 0 #fff;
+  }
+
+  .look-pill.is-complete .look-icon {
+    color: #8c5c14;
+    background: linear-gradient(140deg, #fff5cc, #f0cf78);
+  }
+
+  .look-icon {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 auto;
+    border-radius: 11px;
+    color: var(--rose-deep);
+    background: linear-gradient(140deg, #ffe2ee, #f5c6dc);
+  }
+
+  .look-icon .ic { width: 17px; height: 17px; }
+
+  .look-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .look-meta b {
+    font-family: "Bodoni 72", "Didot", Georgia, serif;
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--rose-deep);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .look-meta small {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .quick-tools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+  }
+
+  .tool-btn {
+    width: 47px;
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 4px 3px 3px;
+    border-radius: 15px;
+    color: var(--ink-soft);
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.96);
+    box-shadow: 0 5px 15px rgba(110, 48, 80, 0.09);
+    transition: transform 140ms ease, background-color 140ms ease, color 140ms ease;
+    touch-action: manipulation;
+  }
+
+  .tool-btn .ic { width: 18px; height: 18px; }
+  .tool-btn span { font-size: 7.5px; font-weight: 700; letter-spacing: 0.015em; line-height: 1.1; }
+
+  .tool-btn:hover { background: #fff; color: var(--rose-deep); }
+  .tool-btn:active { transform: scale(0.94); }
+  .tool-btn.accent { color: #8d5b15; background: linear-gradient(150deg, #fffdf3, #fff1c9); }
+  .tool-btn.rose { color: var(--rose-deep); background: linear-gradient(150deg, #fff, #ffe8f1); }
+
+  .stage-area {
+    position: relative;
+    z-index: 2;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    padding: 0 12px 8px;
+  }
+
+  .stage {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    touch-action: none;
+    border-radius: 27px;
+    border: 1px solid rgba(255, 255, 255, 0.96);
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.8), transparent 64%),
+      linear-gradient(164deg, rgba(255, 245, 250, 0.96), rgba(248, 215, 234, 0.9) 53%, rgba(236, 213, 244, 0.86));
+    box-shadow:
+      0 16px 38px rgba(105, 41, 75, 0.13),
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      inset 0 -24px 50px rgba(215, 146, 184, 0.1);
+    isolation: isolate;
+  }
+
+  .stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.85) 0.8px, transparent 0.8px);
+    background-size: 16px 16px;
+    opacity: 0.22;
+    mask-image: linear-gradient(to bottom, #000, transparent 45%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000, transparent 45%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .arch {
+    position: absolute;
+    left: 13%;
+    right: 13%;
+    top: 7%;
+    bottom: 8%;
+    border-radius: 999px 999px 28px 28px;
+    background:
+      radial-gradient(ellipse at 50% 18%, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.23) 47%, rgba(255, 255, 255, 0.06) 70%),
+      linear-gradient(180deg, rgba(255, 249, 252, 0.28), rgba(255, 255, 255, 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    box-shadow: inset 0 0 42px rgba(255, 255, 255, 0.33);
+    pointer-events: none;
+  }
+
+  .arch::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border-radius: inherit;
+    border: 1px dashed rgba(201, 136, 169, 0.27);
+  }
+
+  .stage-orbit {
+    position: absolute;
+    width: 86%;
+    aspect-ratio: 1;
+    left: 7%;
+    top: 17%;
+    border: 1px solid rgba(255, 255, 255, 0.48);
+    border-radius: 50%;
+    transform: rotate(-10deg) scaleY(0.83);
+    pointer-events: none;
+  }
+
+  .stage-orbit::before,
+  .stage-orbit::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.15);
+  }
+
+  .stage-orbit::before { top: 10%; right: 11%; }
+  .stage-orbit::after { bottom: 13%; left: 8%; width: 4px; height: 4px; }
+
+  .stage-floor {
+    position: absolute;
+    left: 16%;
+    right: 16%;
+    bottom: 5.5%;
+    height: 9%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(142, 69, 107, 0.18), transparent 68%);
+    filter: blur(2px);
+    pointer-events: none;
+  }
+
+  .stage-hair {
+    position: absolute;
+    z-index: 8;
+    top: 8px;
+    left: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 5px 9px 5px 7px;
+    border-radius: 999px;
+    color: #823a63;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 14px rgba(122, 52, 88, 0.1);
+    touch-action: manipulation;
+    transition: background-color 160ms ease, box-shadow 160ms ease, transform 140ms ease;
+  }
+
+  .stage-hair::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+  }
+
+  .stage-hair:active { transform: scale(0.96); }
+  .stage-hair:hover { background: #fff; }
+
+  .stage-hair[aria-expanded="true"] {
+    background: #fff;
+    border-color: #edc2d6;
+    box-shadow: 0 7px 18px rgba(130, 50, 90, 0.16), 0 0 0 2px rgba(214, 79, 136, 0.1);
+  }
+
+  .stage-hair .ic { width: 14px; height: 14px; color: #a74977; }
+
+  .hair-dot {
+    width: 11px;
+    height: 11px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: linear-gradient(140deg, #a86a4a, #5a3020);
+    box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.72), 0 1px 3px rgba(83, 33, 58, 0.2);
+  }
+
+  .stage-sound {
+    position: absolute;
+    z-index: 8;
+    top: 7px;
+    right: 8px;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 14px;
+    color: #7d3a5f;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 14px rgba(122, 52, 88, 0.1);
+    touch-action: manipulation;
+    transition: background-color 160ms ease, color 160ms ease, transform 140ms ease;
+  }
+
+  .stage-sound::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+  }
+
+  .stage-sound .ic { width: 19px; height: 19px; }
+  .stage-sound:hover { background: #fff; }
+  .stage-sound:active { transform: scale(0.94); }
+  .stage-sound.is-off { color: #a38999; background: rgba(255, 255, 255, 0.55); }
+
+  .hair-tray {
+    position: absolute;
+    z-index: 12;
+    left: 9px;
+    right: 9px;
+    bottom: 9px;
+    padding: 8px 10px 10px;
+    border-radius: 18px;
+    background: rgba(255, 250, 253, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.97);
+    box-shadow: 0 14px 30px rgba(92, 35, 67, 0.22), inset 0 1px 0 #fff;
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    animation: hair-tray-in 190ms ease-out both;
+  }
+
+  .hair-tray[hidden] { display: none; }
+
+  .hair-tray-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    padding-left: 2px;
+  }
+
+  .hair-tray-title {
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .hair-color-status {
+    margin-left: auto;
+    font-size: 8.5px;
+    font-weight: 700;
+    color: var(--rose-deep);
+  }
+
+  .hair-close {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin: -2px -4px -2px 0;
+    flex: 0 0 auto;
+    color: var(--ink-soft);
+    background: #fff4f9;
+    border: 1px solid #f1d7e4;
+    border-radius: 9px;
+  }
+
+  .hair-close::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+
+  .hair-close { position: relative; }
+  .hair-close .ic { width: 13px; height: 13px; }
+
+  .hair-swatches {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+  }
+
+  .hair-swatch {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 33px;
+    height: 33px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.95);
+    background: linear-gradient(140deg, var(--hair-a), var(--hair-b));
+    box-shadow: 0 3px 9px rgba(99, 38, 70, 0.19), inset 0 -5px 9px rgba(0, 0, 0, 0.1);
+    touch-action: manipulation;
+    transition: transform 150ms ease, outline-color 150ms ease;
+  }
+
+  .hair-swatch::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+  }
+
+  .hair-swatch:hover { transform: translateY(-1px) scale(1.04); }
+  .hair-swatch:active { transform: scale(0.93); }
+
+  .hair-swatch.is-selected {
+    outline: 2px solid #b23d72;
+    outline-offset: 2px;
+  }
+
+  .hair-check {
+    width: 13px;
+    height: 13px;
+    color: #fff;
+    opacity: 0;
+    filter: drop-shadow(0 1px 2px rgba(60, 20, 40, 0.35));
+    transition: opacity 120ms ease;
+  }
+
+  .hair-swatch.is-selected .hair-check { opacity: 1; }
+
+  .stage.is-hair-open .stage-hint { opacity: 0; }
+
+  @keyframes hair-tray-in {
+    from { opacity: 0; transform: translateY(7px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .doll-wrap {
+    position: absolute;
+    inset: 10px 2px 30px;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
+    padding: 8px 0 2px;
+  }
+
+  #dollSvg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 14px 16px rgba(90, 36, 65, 0.13));
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .stage-hint {
+    position: absolute;
+    z-index: 5;
+    left: 50%;
+    bottom: 9px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: max-content;
+    max-width: calc(100% - 24px);
+    padding: 6px 10px;
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.96);
+    background: rgba(94, 40, 68, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 15px rgba(75, 30, 55, 0.18);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    pointer-events: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .stage-hint .ic { width: 13px; height: 13px; opacity: 0.9; }
+  .stage-hint.is-hidden { opacity: 0; transform: translate(-50%, 5px); }
+
+  .zone-shape {
+    fill: rgba(214, 79, 136, 0.13);
+    stroke: rgba(167, 47, 99, 0.62);
+    stroke-width: 1.2;
+    stroke-dasharray: 4 3;
+    animation: zone-pulse 1.35s ease-in-out infinite;
+  }
+
+  .zone-shape.is-valid {
+    fill: rgba(214, 163, 65, 0.16);
+    stroke: rgba(141, 91, 21, 0.7);
+  }
+
+  .zone-shape.is-error {
+    fill: rgba(214, 79, 136, 0.16);
+    stroke: rgba(167, 47, 99, 0.85);
+    animation: zone-error 460ms ease-out 2;
+  }
+
+  @keyframes zone-pulse {
+    0%, 100% { opacity: 0.65; }
+    50% { opacity: 1; }
+  }
+
+  @keyframes zone-error {
+    0% { opacity: 1; stroke-width: 1.2; }
+    50% { opacity: 1; stroke-width: 2.2; }
+    100% { opacity: 0.4; stroke-width: 1.2; }
+  }
+
+  .equipped-piece {
+    transform-origin: 100px 250px;
+  }
+
+  .equipped-piece.is-new {
+    animation: garment-in 320ms cubic-bezier(0.18, 0.89, 0.35, 1.22) both;
+  }
+
+  @keyframes garment-in {
+    0% { opacity: 0; transform: scale(0.92) translateY(-5px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .wardrobe {
+    position: relative;
+    z-index: 6;
+    flex: 0 0 auto;
+    padding: 8px 13px calc(9px + var(--safe-bottom));
+    border-radius: 27px 27px 0 0;
+    background:
+      linear-gradient(180deg, rgba(255, 252, 254, 0.98), rgba(255, 247, 251, 0.99)),
+      var(--cream);
+    border-top: 1px solid rgba(255, 255, 255, 1);
+    box-shadow:
+      0 -16px 36px rgba(105, 42, 75, 0.11),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .grabber {
+    width: 32px;
+    height: 3px;
+    margin: 0 auto 4px;
+    border-radius: 99px;
+    background: #e9c8d9;
+    opacity: 0.75;
+  }
+
+  .closet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 34px;
+    margin-bottom: 4px;
+    padding-left: 3px;
+  }
+
+  .closet-heading {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .closet-heading > .ic {
+    width: 16px;
+    height: 16px;
+    color: var(--rose);
+  }
+
+  .closet-title {
+    margin: 0;
+    font-family: "Bodoni 72", "Didot", Georgia, serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  .closet-sub {
+    margin: 0;
+    color: var(--ink-faint);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+
+  .closet-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 0 0 auto;
+  }
+
+  .install-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 32px;
+    padding: 3px 7px;
+    flex: 0 0 auto;
+    border-radius: 11px;
+    color: #8b5a12;
+    background: linear-gradient(145deg, #fff9e6, #ffe8ab);
+    border: 1px solid #efd89a;
+    box-shadow: 0 3px 9px rgba(144, 101, 28, 0.13);
+    font-size: 7.8px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    transition: transform 140ms ease, background-color 140ms ease;
+    touch-action: manipulation;
+  }
+
+  .install-btn::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: inherit;
+  }
+
+  .install-btn .ic { width: 14px; height: 14px; }
+  .install-btn:hover { background: #fff3c6; }
+  .install-btn:active { transform: scale(0.93); }
+  .install-btn[hidden] { display: none !important; }
+
+  .restore-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 34px;
+    padding: 4px 8px;
+    border-radius: 11px;
+    color: var(--ink-soft);
+    background: #fdf2f8;
+    border: 1px solid #f4dce8;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: transform 140ms ease, background-color 140ms ease;
+    touch-action: manipulation;
+  }
+
+  .restore-btn::before {
+    content: "";
+    position: absolute;
+    inset: -5px -4px;
+    border-radius: inherit;
+  }
+
+  .restore-btn .ic { width: 14px; height: 14px; }
+  .restore-btn:active { transform: scale(0.95); }
+  .restore-btn:hover { background: #fff; }
+
+  .cats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    min-height: 48px;
+    margin-bottom: 7px;
+    padding: 4px;
+    border-radius: 15px;
+    background: #f8eaf2;
+    border: 1px solid #f2dae6;
+  }
+
+  .cat {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 0;
+    min-height: 40px;
+    padding: 5px 4px;
+    border-radius: 11px;
+    color: var(--ink-soft);
+    background: transparent;
+    font-size: 8.5px;
+    font-weight: 800;
+    letter-spacing: 0.015em;
+    white-space: nowrap;
+    transition: color 150ms ease, background-color 150ms ease, box-shadow 150ms ease, transform 140ms ease;
+    touch-action: manipulation;
+  }
+
+  .cat::before {
+    content: "";
+    position: absolute;
+    inset: -4px -2px;
+    border-radius: inherit;
+  }
+
+  .cat .ic { width: 14px; height: 14px; opacity: 0.8; }
+  .cat:hover { color: var(--rose-deep); background: rgba(255, 255, 255, 0.55); }
+  .cat:active { transform: scale(0.96); }
+
+  .cat.is-active {
+    color: #fff;
+    background: linear-gradient(135deg, #b93e73, #883b76 68%, #744d8e);
+    box-shadow: 0 5px 12px rgba(138, 53, 96, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  .cat.is-active .ic { opacity: 1; }
+
+  .rail {
+    display: flex;
+    gap: 8px;
+    min-height: 105px;
+    padding: 1px 1px 7px;
+    margin: 0 -1px 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+  }
+
+  .rail::-webkit-scrollbar { display: none; }
+
+  .rail-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 96px;
+    color: var(--ink-faint);
+    font-size: 11px;
+  }
+
+  .rail-wrap {
+    position: relative;
+  }
+
+  .rail-nav {
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 36px;
+    border-radius: 11px;
+    color: var(--ink-soft);
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 12px rgba(103, 43, 74, 0.18);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transition: opacity 160ms ease, transform 160ms ease, background-color 160ms ease;
+    touch-action: manipulation;
+  }
+
+  .rail-nav::before {
+    content: "";
+    position: absolute;
+    inset: -4px -6px;
+    border-radius: inherit;
+  }
+
+  .rail-nav .ic { width: 15px; height: 15px; }
+  .rail-nav:hover { background: #fff; color: var(--rose-deep); }
+  .rail-nav:active { transform: translateY(-50%) scale(0.93); }
+  .rail-nav.prev { left: 1px; }
+  .rail-nav.next { right: 1px; }
+  .rail-nav:disabled {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) scale(0.88);
+  }
+
+  .rail-progress {
+    position: absolute;
+    z-index: 3;
+    left: 33px;
+    right: 33px;
+    bottom: 1px;
+    height: 3px;
+    border-radius: 99px;
+    background: rgba(218, 176, 197, 0.34);
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
+  .rail-progress.is-hidden { opacity: 0; }
+
+  .rail-progress span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 36%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #e49ab9, #b94a81 58%, #9058bb);
+    transition: left 120ms ease-out, width 120ms ease-out;
+  }
+
+  .confetti-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    top: -14px;
+    border-radius: 2px;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  .item-card {
+    position: relative;
+    flex: 0 0 91px;
+    width: 91px;
+    height: 105px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1px;
+    padding: 5px 5px 6px;
+    scroll-snap-align: start;
+    touch-action: pan-x;
+    user-select: none;
+    -webkit-user-select: none;
+    border-radius: 16px;
+    color: var(--ink);
+    background:
+      radial-gradient(ellipse at 50% 35%, #fff 0%, #fff8fb 54%, #fffdfd 100%);
+    border: 1px solid #f2d9e5;
+    box-shadow: 0 5px 12px rgba(108, 47, 79, 0.07);
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    -webkit-touch-callout: none;
+  }
+
+  .item-card:hover {
+    border-color: #e7b8ce;
+    box-shadow: 0 8px 18px rgba(108, 47, 79, 0.12);
+    transform: translateY(-1px);
+  }
+
+  .item-card:active { transform: scale(0.975); }
+
+  .item-card.is-equipped {
+    border-color: rgba(179, 65, 115, 0.42);
+    box-shadow: 0 0 0 2px rgba(214, 79, 136, 0.11), 0 9px 19px rgba(113, 46, 81, 0.13);
+    background:
+      radial-gradient(ellipse at 50% 30%, #fff, #fff4f9 62%, #ffeef6 100%);
+  }
+
+  .item-preview {
+    position: relative;
+    width: 74px;
+    height: 70px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    border-radius: 12px;
+    background: radial-gradient(circle at 50% 45%, rgba(255, 236, 244, 0.8), transparent 70%);
+    overflow: hidden;
+  }
+
+  .item-preview svg {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    filter: drop-shadow(0 3px 5px rgba(92, 39, 67, 0.12));
+    pointer-events: none;
+  }
+
+  .item-name {
+    display: -webkit-box;
+    width: 100%;
+    height: 21px;
+    overflow: hidden;
+    color: var(--ink-soft);
+    font-size: 9.2px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .equipped-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: none;
+    place-items: center;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    color: #fff;
+    background: linear-gradient(140deg, #d8548d, #a63469);
+    box-shadow: 0 2px 5px rgba(122, 43, 85, 0.25);
+  }
+
+  .equipped-badge .ic { width: 10px; height: 10px; }
+  .item-card.is-equipped .equipped-badge { display: grid; }
+
+  .closet-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-width: 0;
+    min-height: 45px;
+    padding: 6px 7px;
+    border-radius: 14px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+    touch-action: manipulation;
+  }
+
+  .action-button .ic { width: 16px; height: 16px; }
+  .action-button:active { transform: scale(0.97); }
+
+  .action-button.primary {
+    color: #fff;
+    background:
+      linear-gradient(120deg, rgba(255, 255, 255, 0.15), transparent 40%),
+      linear-gradient(135deg, #c2487f, #98356f 58%, #773e7f);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    box-shadow: 0 8px 18px rgba(146, 48, 100, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.23);
+  }
+
+  .action-button.secondary {
+    color: var(--ink);
+    background: linear-gradient(150deg, #fff, #fff3f8);
+    border: 1px solid #efd5e3;
+    box-shadow: 0 5px 14px rgba(110, 48, 80, 0.08);
+  }
+
+  .action-button.photo {
+    color: #593912;
+    background:
+      linear-gradient(120deg, rgba(255, 255, 255, 0.3), transparent 46%),
+      linear-gradient(140deg, #ffe8a7, #f0c35b 58%, #d8a13b);
+    border: 1px solid rgba(255, 255, 255, 0.44);
+    box-shadow: 0 7px 16px rgba(157, 110, 30, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  .action-button.primary:hover { box-shadow: 0 10px 23px rgba(146, 48, 100, 0.31); }
+  .action-button.secondary:hover { background: #fff; border-color: #e6bcd0; }
+  .action-button.photo:hover { box-shadow: 0 10px 21px rgba(157, 110, 30, 0.26); }
+
+  .action-button.is-busy .ic { animation: spin 900ms linear infinite; }
+  .action-button:disabled { opacity: 0.6; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .modal-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(12px, var(--safe-top)) 12px max(12px, var(--safe-bottom));
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 190ms ease, visibility 190ms ease;
+  }
+
+  .modal-layer[hidden] { display: none !important; }
+  .modal-layer.is-open { opacity: 1; visibility: visible; }
+
+  .modal-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(67, 27, 51, 0.42);
+    -webkit-backdrop-filter: blur(11px) saturate(0.9);
+    backdrop-filter: blur(11px) saturate(0.9);
+  }
+
+  .photo-modal {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 390px);
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding: 12px;
+    border-radius: 26px;
+    background: linear-gradient(165deg, #fffafd, #fbe7f1);
+    border: 1px solid rgba(255, 255, 255, 0.98);
+    box-shadow: 0 28px 70px rgba(63, 21, 45, 0.36), inset 0 1px 0 #fff;
+    transform: translateY(16px) scale(0.97);
+    transition: transform 240ms cubic-bezier(0.2, 0.9, 0.3, 1.08);
+    overflow: hidden;
+  }
+
+  .modal-layer.is-open .photo-modal { transform: translateY(0) scale(1); }
+
+  .modal-layer.is-ready .photo-brand { opacity: 0; }
+
+  .modal-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 1px 2px 0;
+  }
+
+  .modal-kicker {
+    margin: 0 0 1px;
+    color: var(--ink-faint);
+    font-size: 7.5px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .modal-title {
+    margin: 0;
+    font-family: "Bodoni 72", "Didot", Georgia, serif;
+    font-size: 20px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  .modal-icon-button {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    border-radius: 12px;
+    color: var(--ink-soft);
+    background: #fff4f9;
+    border: 1px solid #f0d5e3;
+    box-shadow: 0 3px 9px rgba(104, 42, 73, 0.08);
+    touch-action: manipulation;
+  }
+
+  .modal-icon-button::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+  }
+
+  .modal-icon-button .ic { width: 17px; height: 17px; }
+  .modal-icon-button:hover { background: #fff; }
+
+  .photo-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    max-height: 55dvh;
+    min-height: 180px;
+    flex: 0 1 auto;
+    border-radius: 17px;
+    overflow: hidden;
+    background: #fff;
+    border: 7px solid #fff;
+    box-shadow: 0 8px 26px rgba(99, 39, 71, 0.18), 0 2px 5px rgba(99, 39, 71, 0.08);
+  }
+
+  .photo-preview {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse at 50% 24%, rgba(255, 255, 255, 0.96), transparent 58%),
+      linear-gradient(165deg, #fff0f7 0%, #f8d9e9 55%, #ead7f4 100%);
+    overflow: hidden;
+  }
+
+  .photo-preview::before {
+    content: "";
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    top: 8%;
+    bottom: 8%;
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    border-radius: 999px 999px 24px 24px;
+    box-shadow: inset 0 0 34px rgba(255, 255, 255, 0.34);
+  }
+
+  .photo-preview svg {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 5px 8px 3px;
+    filter: drop-shadow(0 10px 14px rgba(92, 36, 65, 0.16));
+  }
+
+  .photo-preview[hidden] { display: none !important; }
+
+  .photo-result {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #fffafd;
+  }
+
+  .photo-result[hidden] { display: none !important; }
+
+  .photo-vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    box-shadow: inset 0 0 46px rgba(90, 36, 64, 0.13);
+    pointer-events: none;
+  }
+
+  .photo-brand {
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    bottom: 9px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    color: #8f3b68;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    font-size: 6.6px;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: opacity 180ms ease;
+  }
+
+  .photo-brand .ic { width: 10px; height: 10px; color: var(--gold); }
+
+  .photo-count {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    display: grid;
+    place-items: center;
+    color: rgba(255, 255, 255, 0.97);
+    font-family: "Bodoni 72", "Didot", Georgia, serif;
+    font-size: clamp(64px, 22vw, 102px);
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 10px 34px rgba(118, 40, 81, 0.42), 0 2px 0 rgba(151, 48, 99, 0.42);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .photo-count.is-pop { animation: countdown-pop 760ms cubic-bezier(0.17, 0.9, 0.25, 1.1) both; }
+
+  .photo-flash {
+    position: absolute;
+    inset: 0;
+    z-index: 7;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .photo-flash.is-flashing { animation: camera-flash 520ms ease-out both; }
+
+  .photo-caption {
+    margin: 0;
+    min-height: 14px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .photo-actions {
+    display: grid;
+    grid-template-columns: 0.88fr 1.12fr;
+    gap: 7px;
+  }
+
+  .photo-actions .action-button { min-height: 44px; font-size: 10px; }
+
+  @keyframes countdown-pop {
+    0% { opacity: 0; transform: scale(0.55); }
+    22% { opacity: 1; transform: scale(1.06); }
+    70% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.86); }
+  }
+
+  @keyframes camera-flash {
+    0% { opacity: 0; }
+    10% { opacity: 0.58; }
+    38% { opacity: 0.22; }
+    100% { opacity: 0; }
+  }
+
+  .drag-ghost {
+    position: fixed;
+    z-index: 9999;
+    width: 82px;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -54%) rotate(-4deg) scale(0.96);
+    transform-origin: 50% 68%;
+    filter: drop-shadow(0 12px 16px rgba(88, 32, 61, 0.26));
+    transition: opacity 90ms ease;
+    will-change: left, top, transform;
+  }
+
+  .drag-ghost.is-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .drag-ghost svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .drag-ghost::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    width: 58%;
+    height: 8px;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: rgba(84, 32, 58, 0.17);
+    filter: blur(3px);
+  }
+
+  .drag-ghost.is-over-target {
+    filter: drop-shadow(0 0 13px rgba(214, 163, 65, 0.8)) drop-shadow(0 10px 15px rgba(88, 32, 61, 0.22));
+  }
+
+  .toast-host {
+    position: absolute;
+    z-index: 40;
+    top: calc(max(10px, var(--safe-top)) + 122px);
+    left: 50%;
+    width: min(calc(100% - 30px), 400px);
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .toast {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    max-width: 100%;
+    padding: 9px 13px 9px 10px;
+    border-radius: 999px;
+    color: var(--ink);
+    background: rgba(255, 253, 254, 0.96);
+    border: 1px solid rgba(255, 255, 255, 0.94);
+    box-shadow: 0 12px 26px rgba(94, 36, 68, 0.18), 0 2px 7px rgba(94, 36, 68, 0.08);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+    transition: opacity 190ms ease, transform 220ms cubic-bezier(0.2, 0.9, 0.25, 1.2);
+  }
+
+  .toast.is-showing {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .toast-icon {
+    display: grid;
+    place-items: center;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    color: var(--rose-deep);
+    background: linear-gradient(145deg, #ffe5f0, #f9cede);
+  }
+
+  .toast-icon .ic { width: 14px; height: 14px; }
+  .toast.is-gold .toast-icon { color: #8a5b0f; background: linear-gradient(145deg, #fff8dd, #f8e2a4); }
+  .toast.is-lilac .toast-icon { color: #7042a3; background: linear-gradient(145deg, #f4eaff, #e4d0f8); }
+  .toast.is-error .toast-icon { color: #a72f63; background: linear-gradient(145deg, #ffe4eb, #ffcad9); }
+
+  .loading-dot {
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin-left: 2px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: loading-bop 700ms ease-in-out infinite alternate;
+  }
+
+  .loading-dot:nth-child(2) { animation-delay: 150ms; }
+  .loading-dot:nth-child(3) { animation-delay: 300ms; }
+
+  @keyframes loading-bop {
+    from { transform: translateY(0); opacity: 0.35; }
+    to { transform: translateY(-3px); opacity: 1; }
+  }
+
+  .shake {
+    animation: gentle-shake 360ms ease;
+  }
+
+  @keyframes gentle-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    55% { transform: translateX(3px); }
+    78% { transform: translateX(-1.5px); }
+  }
+
+  @media (max-height: 720px) {
+    .topbar { padding-top: max(7px, var(--safe-top)); }
+    .brand-mark { width: 38px; height: 38px; border-radius: 13px; }
+    .eyebrow { display: none; }
+    h1 { font-size: 23px; }
+    .actionbar { padding-bottom: 5px; }
+    .look-pill { min-height: 43px; }
+    .tool-btn { min-height: 44px; }
+    .stage-area { padding-bottom: 6px; }
+    .stage-hair { top: 7px; left: 7px; min-height: 34px; padding: 4px 8px 4px 6px; }
+    .stage-sound { top: 6px; right: 7px; width: 36px; height: 36px; }
+    .hair-tray { left: 7px; right: 7px; bottom: 7px; padding: 7px 9px 8px; }
+    .hair-swatch { width: 31px; height: 31px; }
+    .wardrobe { padding-top: 6px; padding-bottom: calc(7px + var(--safe-bottom)); }
+    .grabber { margin-bottom: 2px; }
+    .closet-head { min-height: 28px; margin-bottom: 3px; }
+    .closet-sub { display: none; }
+    .restore-btn { min-height: 36px; }
+    .cats { min-height: 44px; margin-bottom: 5px; }
+    .cat { min-height: 36px; }
+    .rail { min-height: 98px; margin-bottom: 4px; }
+    .item-card { height: 96px; flex-basis: 87px; width: 87px; }
+    .item-preview { width: 68px; height: 60px; }
+    .item-name { font-size: 8.7px; height: 19px; }
+    .action-button { min-height: 44px; }
+    .stage-hint { padding: 5px 9px; }
+    .toast-host { top: calc(max(7px, var(--safe-top)) + 108px); }
+    .photo-modal { gap: 7px; padding: 10px; border-radius: 22px; }
+    .photo-frame { max-height: 52dvh; min-height: 170px; }
+    .modal-title { font-size: 18px; }
+    .photo-actions .action-button { min-height: 44px; }
+  }
+
+  @media (max-width: 370px) {
+    .topbar { padding-left: 12px; padding-right: 12px; }
+    .actionbar { padding-left: 10px; padding-right: 10px; gap: 5px; }
+    .quick-tools { gap: 4px; }
+    .tool-btn { width: 44px; }
+    .look-pill { padding-right: 9px; }
+    .brand { gap: 8px; }
+    h1 { font-size: 21px; }
+    .brand-mark { width: 38px; height: 38px; }
+    .wardrobe { padding-left: 9px; padding-right: 9px; }
+    .cat { font-size: 7.8px; gap: 2px; }
+    .cat .ic { width: 12px; height: 12px; }
+    .item-card { flex-basis: 86px; width: 86px; }
+    .item-preview { width: 68px; }
+    .action-button { gap: 3px; padding: 6px 4px; font-size: 9.2px; }
+    .action-button .ic { width: 14px; height: 14px; }
+    .photo-actions .action-button { font-size: 9.4px; }
+  }
+
+  @media (min-width: 600px) and (min-height: 760px) {
+    body {
+      display: grid;
+      place-items: center;
+    }
+
+    #game {
+      height: min(100dvh - 32px, 960px);
+      border-radius: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+    }
+
+    .wardrobe {
+      border-radius: 27px 27px 34px 34px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.001ms !important;
+    }
+
+    .photo-count.is-pop {
+      opacity: 1;
+      transform: none;
+    }
+
+    .photo-flash.is-flashing {
+      animation: none;
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-star" viewBox="0 0 24 24">
+    <path d="M12 1.7c.65 5.1 2.75 7.2 7.85 7.85-5.1.65-7.2 2.75-7.85 7.85-.65-5.1-2.75-7.2-7.85-7.85C9.25 8.9 11.35 6.8 12 1.7Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.2 3.1c.5 3.8 2 5.3 5.8 5.8-3.8.5-5.3 2-5.8 5.8-.5-3.8-2-5.3-5.8-5.8 3.8-.5 5.3-2 5.8-5.8Z" fill="currentColor" stroke="none"/>
+    <path d="M18.1 13.2c.25 1.9 1 2.65 2.9 2.9-1.9.25-2.65 1-2.9 2.9-.25-1.9-1-2.65-2.9-2.9 1.9-.25 2.65-1 2.9-2.9Z" fill="currentColor" stroke="none"/>
+    <path d="M5.3 16.1c.18 1.35.72 1.88 2.07 2.07-1.35.18-1.89.72-2.07 2.07-.18-1.35-.72-1.89-2.07-2.07 1.35-.19 1.89-.72 2.07-2.07Z" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-hanger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 4.1a2.25 2.25 0 1 1 2.25 2.25c-1.24 0-2.25 1-2.25 2.25v.95"/>
+    <path d="M12 9.55 4.1 15.2c-1.16.84-.56 2.68.9 2.68h14c1.46 0 2.06-1.84.9-2.68L12 9.55Z"/>
+  </symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 11.2a8 8 0 1 0-2.1 5.55"/>
+    <path d="M20 4.3v6.9h-6.9"/>
+  </symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m8.8 7.2-4.5 4.5 4.5 4.5"/>
+    <path d="M4.3 11.7h9.4a6 6 0 0 1 6 6v.6"/>
+  </symbol>
+  <symbol id="i-shirt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8.2 4 5 5.8 2.8 9.9l3.3 1.8.1 8.1c0 .6.5 1.2 1.2 1.2h11.2c.7 0 1.2-.6 1.2-1.2v-8.1l3.3-1.8-2.2-4.1L17.8 4c-.6 1.9-2.2 3-5.8 3S8.8 5.9 8.2 4Z"/>
+    <path d="M9.2 19.8 14.8 9.7"/>
+  </symbol>
+  <symbol id="i-dice" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    <rect x="3.3" y="3.3" width="17.4" height="17.4" rx="4.1"/>
+    <circle cx="8.1" cy="8.1" r="1.05" fill="currentColor" stroke="none"/>
+    <circle cx="15.9" cy="8.1" r="1.05" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="12" r="1.05" fill="currentColor" stroke="none"/>
+    <circle cx="8.1" cy="15.9" r="1.05" fill="currentColor" stroke="none"/>
+    <circle cx="15.9" cy="15.9" r="1.05" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.2v11.1"/>
+    <path d="m7.8 10.2 4.2 4.2 4.2-4.2"/>
+    <path d="M4.2 15.2v3.7c0 1 .8 1.9 1.9 1.9h11.8c1 0 1.9-.8 1.9-1.9v-3.7"/>
+  </symbol>
+  <symbol id="i-restore" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.8 11.6a8.2 8.2 0 1 0 2.25-5.7"/>
+    <path d="M3.8 3.8v5.9h5.9"/>
+    <path d="M12 8.2v4.2l2.6 1.6"/>
+  </symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round">
+    <rect x="3.5" y="3.5" width="7" height="7" rx="2"/>
+    <rect x="13.5" y="3.5" width="7" height="7" rx="2"/>
+    <rect x="3.5" y="13.5" width="7" height="7" rx="2"/>
+    <rect x="13.5" y="13.5" width="7" height="7" rx="2"/>
+  </symbol>
+  <symbol id="i-dress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8.2 3.4 9.4 8l-1.9 2.1 1.2 3.2C6.7 15 5.3 18 4.7 21c4.6 1.3 9.6 1.3 14.6 0-.6-3-2-6-4-7.7l1.2-3.2L14.6 8l1.2-4.6"/>
+    <path d="M9.5 3.9c.4 1.5 1.3 2.3 2.5 2.3s2.1-.8 2.5-2.3"/>
+    <path d="M8.7 13.3c2.2 1 6.4 1 8.6 0"/>
+  </symbol>
+  <symbol id="i-shoe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.3 17.6c.4-2 .8-3.8 1.2-5.5.5-2.2 1.7-3.1 3.1-2.5 1.1.5 1.7 1.7 2.3 3.1.5 1.2 1.2 2 2.5 2.3l5.1 1.4c1.7.5 2.6 1.6 2.2 2.8-.2.7-.9 1.1-1.9 1.1H5.1c-1.4 0-2-.9-1.8-2.7Z"/>
+    <path d="M7.1 13.5c1.8-.4 3.1.1 4.5 1.2"/>
+    <path d="M8.2 7.7v4.4"/>
+  </symbol>
+  <symbol id="i-gem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m12 3 7.1 6.2L12 21 4.9 9.2 12 3Z"/>
+    <path d="m4.9 9.2 14.2 0M12 3l-2.7 6.2L12 21l2.7-11.8L12 3Z"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m5 12.5 4.4 4.4L19 7.3"/>
+  </symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24">
+    <path d="M12 20.2c-1.1-.8-8.8-5.7-8.8-11.2A4.85 4.85 0 0 1 8.05 4.2c1.65 0 3.13.83 3.95 2.1A4.72 4.72 0 0 1 15.95 4.2 4.85 4.85 0 0 1 20.8 9c0 5.5-7.7 10.4-8.8 11.2Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.4 21 20H3L12 3.4Z"/>
+    <path d="M12 9v4.5"/>
+    <circle cx="12" cy="16.8" r=".9" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-grab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8.4 11.6V5.9a1.6 1.6 0 0 1 3.2 0v4.6"/>
+    <path d="M11.6 10.5V4.6a1.6 1.6 0 0 1 3.2 0v5.9"/>
+    <path d="M14.8 10.8V6.4a1.6 1.6 0 0 1 3.2 0v7.7c0 3.7-2.4 6.2-5.9 6.2-2.2 0-3.7-.9-4.9-2.5l-3-4.2a1.6 1.6 0 0 1 2.5-2l1.7 1.9"/>
+    <path d="M8.4 8.2V5.5a1.6 1.6 0 0 0-3.2 0v6.2"/>
+  </symbol>
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3.4" y="4.2" width="17.2" height="15.6" rx="3.1"/>
+    <circle cx="8.8" cy="9.2" r="1.5"/>
+    <path d="m4.5 17 4.7-4.4 3.2 3 3-2.6 4.2 3.7"/>
+  </symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4.2 9.2h3.1L12 5.4v13.2l-4.7-3.8H4.2V9.2Z"/>
+    <path d="M15.5 8.7a4.7 4.7 0 0 1 0 6.6M18.3 6.1a8.3 8.3 0 0 1 0 11.8"/>
+  </symbol>
+  <symbol id="i-volume-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4.2 9.2h3.1L12 5.4v13.2l-4.7-3.8H4.2V9.2Z"/>
+    <path d="m16 9.2 4.5 5.6M20.5 9.2 16 14.8"/>
+  </symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 8.2h3l1.5-2h7L17 8.2h3a1.8 1.8 0 0 1 1.8 1.8v8a1.8 1.8 0 0 1-1.8 1.8H4a1.8 1.8 0 0 1-1.8-1.8v-8A1.8 1.8 0 0 1 4 8.2Z"/>
+    <circle cx="12" cy="13.8" r="3.4"/>
+    <path d="M17.4 10.8h.1"/>
+  </symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.2a8.9 8.9 0 0 0 0 17.8c1.65 0 2.3-1 2.3-2.1 0-1.3-1-2.1-1-3.2 0-1.2 1-2 2.4-2h1.4c2.1 0 3.6-1.5 3.6-3.6C20.7 6.2 16.8 3.2 12 3.2Z"/>
+    <circle cx="7.6" cy="10" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="11.1" cy="6.9" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="15.1" cy="7.4" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="18.1" cy="10.8" r="1" fill="currentColor" stroke="none"/>
+    <circle cx="8.2" cy="14.3" r="1" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+    <path d="m6.4 6.4 11.2 11.2M17.6 6.4 6.4 17.6"/>
+  </symbol>
+  <symbol id="i-install" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="5.2" y="2.4" width="13.6" height="19.2" rx="3.2"/>
+    <path d="M9.6 5.2h4.8"/>
+    <path d="M12 9.3v6.2M9.6 13.1 12 15.5l2.4-2.4"/>
+    <circle cx="12" cy="18.7" r="0.8" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m14.5 5-7 7 7 7"/>
+  </symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m9.5 5 7 7-7 7"/>
+  </symbol>
+</svg>
+
+<div class="ambient" aria-hidden="true">
+  <span class="ambient-spark s1"><svg viewBox="0 0 24 24"><use href="#i-star"></use></svg></span>
+  <span class="ambient-spark s2"><svg viewBox="0 0 24 24"><use href="#i-star"></use></svg></span>
+  <span class="ambient-spark s3"><svg viewBox="0 0 24 24"><use href="#i-star"></use></svg></span>
+  <span class="ambient-spark s4"><svg viewBox="0 0 24 24"><use href="#i-star"></use></svg></span>
+  <span class="ambient-spark s5"><svg viewBox="0 0 24 24"><use href="#i-star"></use></svg></span>
+  <span class="ambient-spark s6"><svg viewBox="0 0 24 24"><use href="#i-star"></use></svg></span>
+</div>
+
+<main id="game">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg class="ic"><use href="#i-star"></use></svg>
+      </div>
+      <div class="brand-copy">
+        <p class="eyebrow">Ateliê de moda</p>
+        <h1>
+          <svg class="title-star" aria-hidden="true"><use href="#i-star"></use></svg>
+          <span><span class="title-main">Meu Look</span> <span class="fashion">Fashion</span></span>
+          <svg class="title-star" aria-hidden="true" style="animation-delay: -2s"><use href="#i-star"></use></svg>
+        </h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-button" id="btnReset" type="button" aria-label="Reiniciar o jogo e zerar o contador" title="Reiniciar">
+        <svg class="ic" aria-hidden="true"><use href="#i-reset"></use></svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="actionbar" aria-label="Controles do look">
+    <div class="look-pill" role="status" aria-live="polite" aria-atomic="true">
+      <span class="look-icon" aria-hidden="true"><svg class="ic"><use href="#i-hanger"></use></svg></span>
+      <span class="look-meta"><b id="lookCount">0</b><small id="lookWord">looks</small></span>
+    </div>
+    <div class="quick-tools">
+      <button class="tool-btn" id="btnUndo" type="button" aria-label="Desfazer a última alteração" title="Desfazer" disabled>
+        <svg class="ic" aria-hidden="true"><use href="#i-undo"></use></svg>
+        <span>Desfazer</span>
+      </button>
+      <button class="tool-btn rose" id="btnRemove" type="button" aria-label="Tirar todas as roupas e acessórios" title="Tirar tudo">
+        <svg class="ic" aria-hidden="true"><use href="#i-shirt"></use></svg>
+        <span>Tirar tudo</span>
+      </button>
+      <button class="tool-btn accent" id="btnRandom" type="button" aria-label="Criar um look aleatório" title="Look aleatório">
+        <svg class="ic" aria-hidden="true"><use href="#i-dice"></use></svg>
+        <span>Aleatório</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="stage-area" aria-label="Palco da boneca">
+    <div class="stage" id="dollStage">
+      <div class="arch" aria-hidden="true"></div>
+      <div class="stage-orbit" aria-hidden="true"></div>
+      <div class="stage-floor" aria-hidden="true"></div>
+
+      <button class="stage-hair" id="btnHair" type="button" aria-label="Mudar a cor do cabelo" aria-expanded="false" aria-controls="hairTray" title="Cor do cabelo">
+        <svg class="ic" aria-hidden="true"><use href="#i-palette"></use></svg>
+        <span class="hair-dot" id="hairDot" aria-hidden="true"></span>
+        <span>Cabelo</span>
+      </button>
+      <button class="stage-sound" id="btnSound" type="button" aria-label="Desativar sons" aria-pressed="true" title="Sons">
+        <svg class="ic" aria-hidden="true"><use href="#i-volume"></use></svg>
+      </button>
+
+      <div class="doll-wrap">
+        <svg id="dollSvg" viewBox="0 0 200 420" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Boneca de moda de corpo inteiro, pronta para ser vestida">
+          <defs>
+            <radialGradient id="skinGrad" cx="36%" cy="26%" r="82%">
+              <stop offset="0%" stop-color="#ffece3"/>
+              <stop offset="34%" stop-color="#ffe0d0"/>
+              <stop offset="76%" stop-color="#f5c4a8"/>
+              <stop offset="100%" stop-color="#eeb18e"/>
+            </radialGradient>
+            <linearGradient id="skinSide" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffe7dc"/>
+              <stop offset="100%" stop-color="#f3b999"/>
+            </linearGradient>
+            <linearGradient id="hairBase" x1="18%" y1="0%" x2="78%" y2="100%">
+              <stop offset="0%" stop-color="#a86a4a"/>
+              <stop offset="48%" stop-color="#7e4b32"/>
+              <stop offset="100%" stop-color="#5a3020"/>
+            </linearGradient>
+            <linearGradient id="hairShine" x1="10%" y1="10%" x2="90%" y2="90%">
+              <stop offset="0%" stop-color="#d5a07b"/>
+              <stop offset="50%" stop-color="#b27b58"/>
+              <stop offset="100%" stop-color="#8b563b"/>
+            </linearGradient>
+            <linearGradient id="hairLock" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#8f593e"/>
+              <stop offset="100%" stop-color="#5b3020"/>
+            </linearGradient>
+            <linearGradient id="lipGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#dd7189"/>
+              <stop offset="100%" stop-color="#b84563"/>
+            </linearGradient>
+            <radialGradient id="blushGrad">
+              <stop offset="0%" stop-color="#f08baa" stop-opacity="0.54"/>
+              <stop offset="100%" stop-color="#f08baa" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="groundRadial">
+              <stop offset="0%" stop-color="#8d476b" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#8d476b" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="baseFabric" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#fbd3e2"/>
+              <stop offset="100%" stop-color="#efaec8"/>
+            </linearGradient>
+            <linearGradient id="eyeIris" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#8b5a41"/>
+              <stop offset="58%" stop-color="#6a3d2a"/>
+              <stop offset="100%" stop-color="#3f2117"/>
+            </linearGradient>
+          </defs>
+
+          <ellipse cx="100" cy="411" rx="55" ry="6.5" fill="url(#groundRadial)"/>
+
+          <g id="dollBack">
+            <path d="M100 24C65 24 45 48 45 82c0 27-7 52-16 80-10 30-10 75 1 113 6 22 17 40 28 51 1-24 1-48-3-72 13-27 16-57 13-87-5-46 10-93 32-113 22 20 37 67 32 113-3 30 0 60 13 87-4 24-4 48-3 72 11-11 22-29 28-51 11-38 11-83 1-113-9-28-16-53-16-80 0-34-20-58-55-58Z" fill="url(#hairBase)"/>
+            <path d="M56 76c-15 44-8 98-22 148-6 23-2 53 10 77 2-28 5-52 12-76 6-34-3-73 8-115-2-14-4-25-8-34Z" fill="url(#hairShine)" opacity="0.34"/>
+            <path d="M144 76c15 44 8 98 22 148 6 23 2 53-10 77-2-28-5-52-12-76-6-34 3-73-8-115 2-14 4-25 8-34Z" fill="url(#hairShine)" opacity="0.3"/>
+            <path d="M67 46c-17 22-18 60-15 91-6 35-5 70-14 101 9-3 21-17 25-34 9-30 3-66 13-101 4-21 9-41 19-55-10-9-20-10-28-2Z" fill="url(#hairLock)" opacity="0.5"/>
+            <path d="M134 47c17 22 18 60 15 91 6 35 5 70 14 101-9-3-21-17-25-34-9-30-3-66-13-101-4-21-9-41-19-55 10-9 20-10 28-2Z" fill="url(#hairLock)" opacity="0.44"/>
+            <path d="M58 292c4 21 14 39 25 48 0-18 0-35-2-52-8 4-16 6-23 4ZM142 292c-4 21-14 39-25 48 0-18 0-35 2-52 8 4 16 6 23 4Z" fill="url(#hairBase)" opacity="0.9"/>
+            <path d="M82 59c-10 14-15 34-13 53M118 59c10 14 15 34 13 53" fill="none" stroke="url(#hairShine)" stroke-width="1.4" stroke-linecap="round" opacity="0.34"/>
+          </g>
+
+          <g id="dollBody">
+            <path d="M79 284c-3 17-2 38 1 60 2 18 3 36 2 52h15c1-18 2-38 1-58-1-24 3-42 5-56H79Z" fill="url(#skinGrad)"/>
+            <path d="M121 284c3 17 2 38-1 60-2 18-3 36-2 52h-15c-1-18-2-38-1-58 1-24-3-42-5-56h24Z" fill="url(#skinGrad)"/>
+            <path d="M102 288c1 16 2 36 1 58-1 18-1 34 0 50h-4c-2-16-2-34-1-51 1-22-1-41-3-57h7Z" fill="#e5a583" opacity="0.34"/>
+            <path d="M80 333c5-2 10-2 15 0M105 333c5-2 10-2 15 0" fill="none" stroke="#e3a17f" stroke-width="0.9" stroke-linecap="round" opacity="0.4"/>
+
+            <path d="M82 392c1 6 0 12-7 15-5 2-8 4-5 6 6 3 18 1 23-4 3-2 3-8 2-14-1-3-7-4-13-3Z" fill="url(#skinGrad)"/>
+            <path d="M118 392c-1 6 0 12 7 15 5 2 8 4 5 6-6 3-18 1-23-4-3-2-3-8-2-14 1-3 7-4 13-3Z" fill="url(#skinGrad)"/>
+            <path d="M76 406c6 2 13 2 19 0M105 406c6 2 13 2 19 0" fill="none" stroke="#e0a07f" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
+
+            <path d="M91 124c0 12 0 23-3 29-2 5-6 8-12 11-10 5-18 15-19 26-1 11 3 20 7 28 2 6 1 12-1 19-3 9-4 20-1 32 3 12 10 19 19 24h38c9-5 16-12 19-24 3-12 2-23-1-32-2-7-3-13-1-19 4-8 8-17 7-28-1-11-9-21-19-26-6-3-10-6-12-11-3-6-3-17-3-29H91Z" fill="url(#skinGrad)"/>
+            <path d="M91 126c0 10 0 20-2 27 5 4 17 5 22 0-2-7-2-17-2-27H91Z" fill="#e8a887" opacity="0.45"/>
+            <path d="M79 188c5 4 14 5 21 2M100 190c7 3 16 2 21-2" fill="none" stroke="#e3a281" stroke-width="0.9" stroke-linecap="round" opacity="0.55"/>
+            <path d="M99 218c-1 7-1 14 1 20M84 241c5 2 10 3 15 2M116 243c-5 1-10 2-15 1" fill="none" stroke="#e3a17f" stroke-width="0.9" stroke-linecap="round" opacity="0.37"/>
+
+            <g id="baseBandeau">
+              <path d="M76 193c6 5 17 8 24 8s18-3 24-8l3 8c-6 10-15 13-27 13s-21-3-27-13l3-8Z" fill="url(#baseFabric)"/>
+              <path d="M77 195c8 5 15 6 23 6s15-1 23-6" fill="none" stroke="#fff" stroke-width="0.8" opacity="0.45"/>
+            </g>
+            <g id="baseBriefs">
+              <path d="M76 259c8-4 16-5 24-5s16 1 24 5c2 9 4 18 5 26-11 7-21 9-29 9s-18-2-29-9c1-8 3-17 5-26Z" fill="url(#baseFabric)"/>
+              <path d="M75 266c9 2 17 3 25 3s16-1 25-3" fill="none" stroke="#fff" stroke-width="0.9" opacity="0.4"/>
+            </g>
+
+            <path d="M70 169c-8 8-14 23-17 39-3 16-4 33-1 48 1 7 4 12 8 14 4 2 7-2 5-7-4-13-2-28 1-42 3-15 9-32 14-44l-10-8Z" fill="url(#skinSide)"/>
+            <path d="M130 169c8 8 14 23 17 39 3 16 4 33 1 48-1 7-4 12-8 14-4 2-7-2-5-7 4-13 2-28-1-42-3-15-9-32-14-44l10-8Z" fill="url(#skinSide)"/>
+            <path d="M52 253c-4 4-6 10-4 17 2 7 9 11 15 9 5-2 4-9 2-14-2-5-4-10-7-13-2-2-4-1-6 1Z" fill="url(#skinGrad)"/>
+            <path d="M148 253c4 4 6 10 4 17-2 7-9 11-15 9-5-2-4-9-2-14 2-5 4-10 7-13 2-2 4-1 6 1Z" fill="url(#skinGrad)"/>
+            <path d="M52 263c3 3 4 7 3 11M148 263c-3 3-4 7-3 11" fill="none" stroke="#e3a17f" stroke-width="0.8" stroke-linecap="round" opacity="0.55"/>
+
+            <path d="M73 92c0-22 11-37 27-37s27 15 27 37c0 16-7 29-18 36-4 3-14 3-18 0-11-7-18-20-18-36Z" fill="url(#skinGrad)"/>
+            <ellipse cx="71.5" cy="99" rx="5" ry="8.5" fill="url(#skinGrad)"/>
+            <ellipse cx="128.5" cy="99" rx="5" ry="8.5" fill="url(#skinGrad)"/>
+            <path d="M70 95c2 1 3 4 2 7M130 95c-2 1-3 4-2 7" fill="none" stroke="#e4a17e" stroke-width="0.75" stroke-linecap="round" opacity="0.55"/>
+
+            <ellipse cx="83.5" cy="106" rx="8" ry="5.5" fill="url(#blushGrad)"/>
+            <ellipse cx="116.5" cy="106" rx="8" ry="5.5" fill="url(#blushGrad)"/>
+
+            <g id="dollFace">
+              <path d="M83.2 91.8c2.8-3.8 9.3-3.8 12.1 0-2.8 4.5-9.3 4.5-12.1 0Z" fill="#fffafb"/>
+              <circle cx="89.3" cy="91.5" r="2.7" fill="url(#eyeIris)"/>
+              <circle cx="89.3" cy="91.5" r="1.35" fill="#2a1710"/>
+              <circle cx="90.1" cy="90.6" r="0.7" fill="#fffdf9"/>
+              <path d="M82.2 90.7c2.5-4 10.1-4.2 13.2-.4" fill="none" stroke="#4d2c20" stroke-width="1.15" stroke-linecap="round"/>
+              <path d="m82.7 90.2-1.8-1.7M84.3 87.6l-1.2-2.1M95 87.3l1.2-2" fill="none" stroke="#4d2c20" stroke-width="0.85" stroke-linecap="round"/>
+
+              <path d="M104.7 91.8c2.8-3.8 9.3-3.8 12.1 0-2.8 4.5-9.3 4.5-12.1 0Z" fill="#fffafb"/>
+              <circle cx="110.7" cy="91.5" r="2.7" fill="url(#eyeIris)"/>
+              <circle cx="110.7" cy="91.5" r="1.35" fill="#2a1710"/>
+              <circle cx="111.5" cy="90.6" r="0.7" fill="#fffdf9"/>
+              <path d="M104.6 90.7c2.5-4 10.1-4.2 13.2-.4" fill="none" stroke="#4d2c20" stroke-width="1.15" stroke-linecap="round"/>
+              <path d="m117.3 90.2 1.8-1.7M115.7 87.6l1.2-2.1M105 87.3l-1.2-2" fill="none" stroke="#4d2c20" stroke-width="0.85" stroke-linecap="round"/>
+
+              <path d="M82.5 84.3c3.3-2.1 7.3-2 10.2.1M107.3 84.4c3.3-2.1 7.3-2 10.2-.1" fill="none" stroke="#6f4532" stroke-width="1.1" stroke-linecap="round" opacity="0.82"/>
+
+              <path d="M99.6 97.3c-.8 3.7-1.8 7.2.7 7.9 1.5.4 3-.1 3.7-1" fill="none" stroke="#d58f76" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <path d="M92.6 112.4c2.5-2.7 5.1-2.2 7.4-.8 2.3-1.4 4.9-1.9 7.4.8-2.7 5-12.1 5-14.8 0Z" fill="url(#lipGrad)"/>
+              <path d="M93.4 112.4c3.1 1.5 10.1 1.5 13.2 0" fill="none" stroke="#993950" stroke-width="0.65" stroke-linecap="round" opacity="0.7"/>
+              <path d="M96.1 114.2c1.8 1.2 6 1.2 7.8 0" fill="none" stroke="#ffd7df" stroke-width="0.65" stroke-linecap="round" opacity="0.7"/>
+              <circle cx="105.8" cy="110.1" r="0.45" fill="#9b604c" opacity="0.7"/>
+            </g>
+
+            <g id="dollHairFront">
+              <path d="M70 86c-1-23 11-44 30-44s31 21 30 44c-6-8-13-15-21-18-9 10-26 14-39 18Z" fill="url(#hairBase)"/>
+              <path d="M111 47c13 6 20 19 18 37-4-12-11-20-20-24 4-5 5-9 2-13Z" fill="url(#hairShine)" opacity="0.7"/>
+              <path d="M90 46c-10 5-16 15-16 27 4-8 10-14 17-18 3-2 3-6-1-9Z" fill="url(#hairShine)" opacity="0.45"/>
+              <path d="M71 82c-5 18-4 39-10 58-4 14-2 30 4 42-1-18 9-30 9-49 0-19-4-36 4-47l-7-4Z" fill="url(#hairBase)"/>
+              <path d="M129 82c5 18 4 39 10 58 4 14 2 30-4 42 1-18-9-30-9-49 0-19 4-36-4-47l7-4Z" fill="url(#hairBase)"/>
+              <path d="M64 90c-3 14-1 28-6 41M136 90c3 14 1 28 6 41M74 68c-3 7-4 14-3 21M126 68c3 7 4 14 3 21" fill="none" stroke="url(#hairShine)" stroke-width="0.9" stroke-linecap="round" opacity="0.36"/>
+              <path d="M74 91c-2 5-4 9-7 12M126 91c2 5 4 9 7 12" fill="none" stroke="url(#hairShine)" stroke-width="0.8" stroke-linecap="round" opacity="0.35"/>
+            </g>
+          </g>
+
+          <g id="zoneHint" pointer-events="none"></g>
+          <g id="clothingLayer"></g>
+        </svg>
+      </div>
+
+      <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+
+      <div class="stage-hint" id="stageHint">
+        <svg class="ic" aria-hidden="true"><use href="#i-grab"></use></svg>
+        Arraste ou toque nas peças
+      </div>
+
+      <div class="hair-tray" id="hairTray" hidden>
+        <div class="hair-tray-head">
+          <span class="hair-tray-title">Cor do cabelo</span>
+          <span class="hair-color-status" id="hairColorStatus" aria-live="polite">Castanho</span>
+          <button class="hair-close" id="btnHairClose" type="button" aria-label="Fechar opções de cor do cabelo">
+            <svg class="ic" aria-hidden="true"><use href="#i-close"></use></svg>
+          </button>
+        </div>
+        <div class="hair-swatches" id="hairSwatches" role="group" aria-label="Escolha a cor do cabelo"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wardrobe" id="wardrobe" aria-label="Guarda-roupa">
+    <div class="grabber" aria-hidden="true"></div>
+    <div class="closet-head">
+      <div class="closet-heading">
+        <svg class="ic" aria-hidden="true"><use href="#i-hanger"></use></svg>
+        <div>
+          <h2 class="closet-title">Seu closet</h2>
+          <p class="closet-sub" id="closetCount">31 peças para combinar</p>
+        </div>
+      </div>
+      <div class="closet-head-actions">
+        <button class="install-btn" id="btnInstall" type="button" aria-label="Instalar o jogo como aplicativo" title="Instalar aplicativo" hidden>
+          <svg class="ic" aria-hidden="true"><use href="#i-install"></use></svg>
+          <span>Instalar</span>
+        </button>
+        <button class="restore-btn" id="btnRestore" type="button" aria-label="Restaurar o último look guardado" title="Restaurar look" disabled>
+          <svg class="ic" aria-hidden="true"><use href="#i-restore"></use></svg>
+          <span>Restaurar</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="cats" role="group" aria-label="Filtrar peças por categoria">
+      <button class="cat is-active" type="button" data-filter="all" aria-pressed="true" aria-label="Mostrar todas as peças">
+        <svg class="ic" aria-hidden="true"><use href="#i-grid"></use></svg>
+        <span>Todas</span>
+      </button>
+      <button class="cat" type="button" data-filter="clothes" aria-pressed="false" aria-label="Mostrar roupas">
+        <svg class="ic" aria-hidden="true"><use href="#i-dress"></use></svg>
+        <span>Roupas</span>
+      </button>
+      <button class="cat" type="button" data-filter="shoes" aria-pressed="false" aria-label="Mostrar sapatos">
+        <svg class="ic" aria-hidden="true"><use href="#i-shoe"></use></svg>
+        <span>Sapatos</span>
+      </button>
+      <button class="cat" type="button" data-filter="accessories" aria-pressed="false" aria-label="Mostrar acessórios">
+        <svg class="ic" aria-hidden="true"><use href="#i-gem"></use></svg>
+        <span>Acessórios</span>
+      </button>
+    </div>
+
+    <div class="rail-wrap">
+      <div class="rail" id="rail" aria-label="Peças do guarda-roupa"></div>
+      <button class="rail-nav prev" id="btnRailPrev" type="button" aria-label="Ver peças anteriores" aria-controls="rail" disabled>
+        <svg class="ic" aria-hidden="true"><use href="#i-chevron-left"></use></svg>
+      </button>
+      <button class="rail-nav next" id="btnRailNext" type="button" aria-label="Ver mais peças" aria-controls="rail">
+        <svg class="ic" aria-hidden="true"><use href="#i-chevron-right"></use></svg>
+      </button>
+      <div class="rail-progress is-hidden" id="railProgress" aria-hidden="true">
+        <span id="railProgressThumb"></span>
+      </div>
+    </div>
+
+    <div class="closet-actions">
+      <button class="action-button primary" id="btnSave" type="button" aria-label="Salvar o look como imagem PNG">
+        <svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg>
+        <span>Salvar</span>
+      </button>
+      <button class="action-button photo" id="btnPhoto" type="button" aria-label="Tirar uma foto do look no estúdio">
+        <svg class="ic" aria-hidden="true"><use href="#i-camera"></use></svg>
+        <span>Foto</span>
+      </button>
+      <button class="action-button secondary" id="btnNew" type="button" aria-label="Criar um novo look e limpar as roupas">
+        <svg class="ic" aria-hidden="true"><use href="#i-sparkles"></use></svg>
+        <span>Novo look</span>
+      </button>
+    </div>
+  </section>
+
+  <div class="toast-host" id="toastHost" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="modal-layer" id="photoOverlay" hidden>
+    <div class="modal-scrim" data-close-photo aria-hidden="true"></div>
+    <section class="photo-modal" role="dialog" aria-modal="true" aria-labelledby="photoTitle">
+      <header class="modal-head">
+        <div>
+          <p class="modal-kicker">Estúdio de fotos</p>
+          <h2 class="modal-title" id="photoTitle">Prepare a pose</h2>
+        </div>
+        <button class="modal-icon-button" id="btnPhotoClose" type="button" aria-label="Fechar o estúdio de fotos">
+          <svg class="ic" aria-hidden="true"><use href="#i-close"></use></svg>
+        </button>
+      </header>
+      <div class="photo-frame" id="photoFrame">
+        <div class="photo-preview" id="photoPreview" aria-hidden="true"></div>
+        <img class="photo-result" id="photoResult" alt="Foto do look montado na boneca" hidden />
+        <div class="photo-vignette" aria-hidden="true"></div>
+        <div class="photo-brand" aria-hidden="true">
+          <svg class="ic"><use href="#i-star"></use></svg>
+          <span>Meu Look</span>
+        </div>
+        <div class="photo-count" id="photoCount" aria-live="polite" aria-atomic="true"></div>
+        <div class="photo-flash" id="photoFlash" aria-hidden="true"></div>
+      </div>
+      <p class="photo-caption" id="photoCaption" role="status" aria-live="polite">Deixe o look pronto e sorria.</p>
+      <div class="photo-actions">
+        <button class="action-button secondary" id="btnPhotoCancel" type="button" aria-label="Fechar o estúdio de fotos">Fechar</button>
+        <button class="action-button photo" id="btnPhotoDownload" type="button" aria-label="Baixar a foto do look" disabled>
+          <svg class="ic" aria-hidden="true"><use href="#i-save"></use></svg>
+          <span>Baixar foto</span>
+        </button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+  const ZONES = {
+    dress:  { x: 62, y: 185, w: 76,  h: 135 },
+    top:    { x: 70, y: 185, w: 60,  h: 50  },
+    bottom: { x: 64, y: 235, w: 72,  h: 110 },
+    feet:   { x: 68, y: 385, w: 64,  h: 25  },
+    neck:   { x: 85, y: 172, w: 30,  h: 22  },
+    head:   { x: 65, y: 35,  w: 70,  h: 90  },
+    earrings: { x: 56, y: 84, w: 88, h: 46 },
+    hand:   { x: 38, y: 228, w: 124, h: 42  },
+  };
+
+  const ZONE_ORDER = ['bottom', 'dress', 'top', 'feet', 'neck', 'earrings', 'head', 'hand'];
+
+  const ITEMS = [
+    {
+      id: 'dress-rosa',
+      name: 'Vestido Rosa',
+      category: 'clothes',
+      zone: 'dress',
+      pos: { x: 46, y: 160, w: 108, h: 178 },
+      svg: `
+        <defs>
+          <linearGradient id="dressRoseA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffa6cc"/>
+            <stop offset="52%" stop-color="#f273a8"/>
+            <stop offset="100%" stop-color="#d8407f"/>
+          </linearGradient>
+          <linearGradient id="dressRoseB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffd5e5"/>
+            <stop offset="100%" stop-color="#ff9fc9"/>
+          </linearGradient>
+          <linearGradient id="dressRoseC" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#b92f68"/>
+            <stop offset="100%" stop-color="#e0558e"/>
+          </linearGradient>
+        </defs>
+        <path d="M77 174C85 181 92 187 95 198c2 6 8 6 10 0 3-11 10-17 18-24l6 28c6 12 4 24-3 35 10 16 17 41 14 66-2 14-11 21-24 25-10 3-22 3-32 0-13-4-22-11-24-25-3-25 4-50 14-66-7-11-9-23-3-35l6-28Z" fill="url(#dressRoseA)"/>
+        <path d="M75 231c8 5 17 7 25 7s17-2 25-7l2 11c-9 6-18 8-27 8s-18-2-27-8l2-11Z" fill="url(#dressRoseC)"/>
+        <path d="M80 238c3 6 11 10 20 10s17-4 20-10" fill="none" stroke="#ffd9e7" stroke-width="1.2" stroke-linecap="round" opacity=".65"/>
+        <path d="M88 245c-4 20-7 43-5 66M100 246c0 20 0 43 1 66M112 245c4 20 7 43 5 66" fill="none" stroke="#c23a72" stroke-width="1.05" stroke-linecap="round" opacity=".35"/>
+        <path d="M61 304c4 13 16 22 32 25 4 .7 9 1 13 .7-10-4-18-10-22-18-2-4-2-8-1-12-7 1-15 2-22 4Z" fill="#ffc3db" opacity=".55"/>
+        <path d="M139 304c-4 13-16 22-32 25-4 .7-9 1-13 .7 10-4 18-10 22-18 2-4 2-8 1-12 7 1 15 2 22 4Z" fill="#ff9fc7" opacity=".55"/>
+        <path d="M60 315c12 12 34 17 55 13 12-2 20-6 26-12l-2 8c-13 13-34 18-55 15-13-2-21-7-26-15l2-9Z" fill="url(#dressRoseB)"/>
+        <path d="M79 179c5 4 11 7 17 8M121 179c-5 4-11 7-17 8" fill="none" stroke="#ffd6e7" stroke-width="1.1" stroke-linecap="round" opacity=".7"/>
+        <path d="M99 235c-7-6-15-4-16 1-1 4 4 8 11 8-3 4-2 8 1 10 3-1 5-4 5-8 2 4 5 6 8 5 2-3 1-7-2-10 7 1 12-3 11-7-1-4-9-5-15 1Z" fill="url(#dressRoseB)"/>
+        <circle cx="100" cy="242" r="2.2" fill="#c03069"/>
+        <path d="M74 197c5-7 11-12 17-14" fill="none" stroke="#ffe0ec" stroke-width="1.2" stroke-linecap="round" opacity=".55"/>
+        <path d="M118 61c.5 4.2 2.2 5.9 6.4 6.4-4.2.5-5.9 2.2-6.4 6.4-.5-4.2-2.2-5.9-6.4-6.4 4.2-.5 5.9-2.2 6.4-6.4Z" fill="#ffd9a4" opacity=".85"/>
+        <path d="M82 287c.4 3.3 1.7 4.6 5 5-3.3.4-4.6 1.7-5 5-.4-3.3-1.7-4.6-5-5 3.3-.4 4.6-1.7 5-5Z" fill="#fff" opacity=".8"/>
+      `,
+    },
+    {
+      id: 'dress-lilas',
+      name: 'Vestido Lilás',
+      category: 'clothes',
+      zone: 'dress',
+      pos: { x: 44, y: 158, w: 112, h: 182 },
+      svg: `
+        <defs>
+          <linearGradient id="dressLilacA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ddc4ff"/>
+            <stop offset="52%" stop-color="#b58ce9"/>
+            <stop offset="100%" stop-color="#8453c3"/>
+          </linearGradient>
+          <linearGradient id="dressLilacB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f3e7ff"/>
+            <stop offset="100%" stop-color="#d2b4f5"/>
+          </linearGradient>
+          <linearGradient id="dressLilacC" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8f5dcb"/>
+            <stop offset="100%" stop-color="#6d3aa9"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="66" cy="199" rx="13" ry="10" fill="url(#dressLilacB)"/>
+        <ellipse cx="134" cy="199" rx="13" ry="10" fill="url(#dressLilacB)"/>
+        <path d="M66 197c1 5 5 9 11 10M134 197c-1 5-5 9-11 10" fill="none" stroke="#9360cd" stroke-width="1" opacity=".55"/>
+        <path d="M69 196c6-9 18-15 31-15s25 6 31 15l2 22c1 9-3 17-10 22 11 18 18 44 15 68-3 15-14 22-29 25-12 2-25 2-36-1-14-4-23-12-25-26-3-24 4-49 15-66-7-5-11-13-10-22l2-22Z" fill="url(#dressLilacA)"/>
+        <path d="M70 231c8 6 19 9 30 9s22-3 30-9l1 9c-9 7-20 10-31 10s-22-3-31-10l1-9Z" fill="url(#dressLilacC)"/>
+        <path d="M78 239c-12 21-18 48-14 70 2 12 11 18 23 21-4-22 1-46 10-64 4-9 8-16 11-21M122 239c12 21 18 48 14 70-2 12-11 18-23 21 4-22-1-46-10-64-4-9-8-16-11-21" fill="url(#dressLilacB)" opacity=".45"/>
+        <path d="M58 303c3 14 17 24 36 27 20 3 38-3 48-17-2 14-14 24-31 27-22 4-43-4-51-19l-2-18Z" fill="url(#dressLilacB)" opacity=".65"/>
+        <path d="M67 175c5 7 8 17 6 27M133 175c-5 7-8 17-6 27" fill="none" stroke="#f1e4ff" stroke-width="1" opacity=".55"/>
+        <path d="M82 242c2 22-1 47-8 68M118 242c-2 22 1 47 8 68" fill="none" stroke="#7642b2" stroke-width=".9" stroke-linecap="round" opacity=".3"/>
+        <g fill="#f8efff" opacity=".75">
+          <circle cx="76" cy="275" r="1.1"/><circle cx="85" cy="292" r=".8"/><circle cx="70" cy="310" r=".9"/>
+          <circle cx="124" cy="275" r="1.1"/><circle cx="115" cy="292" r=".8"/><circle cx="130" cy="310" r=".9"/>
+        </g>
+        <circle cx="100" cy="239" r="3.4" fill="#f4e9ff"/>
+        <circle cx="93" cy="237" r="2.6" fill="#d7b6f6"/>
+        <circle cx="107" cy="237" r="2.6" fill="#d7b6f6"/>
+        <circle cx="100" cy="233" r="2.2" fill="#b68ae8"/>
+        <path d="M93 238c-4-2-7 0-6 3 1 3 5 3 8 1M107 238c4-2 7 0 6 3-1 3-5 3-8 1" fill="#9b6bd0" opacity=".75"/>
+        <path d="M83 190c5-4 11-6 17-7" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+        <path d="M128 74c.4 3.6 1.9 5.1 5.5 5.5-3.6.4-5.1 1.9-5.5 5.5-.4-3.6-1.9-5.1-5.5-5.5 3.6-.4 5.1-1.9 5.5-5.5Z" fill="#f0dcff" opacity=".9"/>
+      `,
+    },
+    {
+      id: 'dress-dourado',
+      name: 'Vestido Dourado',
+      category: 'clothes',
+      zone: 'dress',
+      pos: { x: 44, y: 158, w: 112, h: 182 },
+      svg: `
+        <defs>
+          <linearGradient id="dressGoldA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffe9aa"/>
+            <stop offset="38%" stop-color="#f4c65f"/>
+            <stop offset="72%" stop-color="#dda031"/>
+            <stop offset="100%" stop-color="#b97d1e"/>
+          </linearGradient>
+          <linearGradient id="dressGoldB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff5c9"/>
+            <stop offset="100%" stop-color="#e6b84b"/>
+          </linearGradient>
+          <linearGradient id="dressGoldC" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#a86b17"/>
+            <stop offset="100%" stop-color="#dcae4e"/>
+          </linearGradient>
+        </defs>
+        <path d="M108 169c12 8 21 22 23 38l3 15c2 9-2 17-8 22 11 19 17 44 13 68-3 16-14 23-30 26-13 2-26 2-37-1-15-4-24-13-26-27-3-24 4-48 15-66-6-5-10-13-8-22l3-15c2-16 11-29 23-37l6 19c4-6 8-13 9-20l4 20c1-6 4-13 9-20Z" fill="url(#dressGoldA)"/>
+        <path d="M86 178c10 8 22 11 32 8l2 10c-12 5-25 4-37-3l3-15Z" fill="url(#dressGoldB)" opacity=".72"/>
+        <path d="M73 231c9 5 18 7 27 7s19-2 27-7l2 8c-9 7-19 10-29 10s-20-3-29-10l2-8Z" fill="url(#dressGoldC)"/>
+        <path d="M73 240c-7 22-9 47-2 66 4 10 12 16 23 19-3-20 2-43 8-63 3-9 6-16 8-22M127 240c7 22 9 47 2 66-4 10-12 16-23 19 3-20-2-43-8-63-3-9-6-16-8-22" fill="url(#dressGoldB)" opacity=".35"/>
+        <path d="M62 302c2 16 16 27 38 30 21 3 37-4 44-19-1 17-13 28-32 31-22 4-42-5-48-21l-2-21Z" fill="#f8d579" opacity=".55"/>
+        <path d="M60 316c11 13 33 19 55 15 11-2 19-6 25-11l-2 7c-11 12-28 17-46 16-15-1-27-7-34-17l2-10Z" fill="url(#dressGoldB)"/>
+        <path d="M99 188c1 5 2 10 1 15M100 247c0 14-1 29-3 44" fill="none" stroke="#fff3bf" stroke-width="1" stroke-linecap="round" opacity=".55"/>
+        <path d="M78 250c-4 20-5 40-2 58M122 250c4 20 5 40 2 58" fill="none" stroke="#a96a16" stroke-width=".8" stroke-linecap="round" opacity=".33"/>
+        <g fill="#fff7ce">
+          <path d="M76 84c.4 3.8 2 5.4 5.8 5.8-3.8.4-5.4 2-5.8 5.8-.4-3.8-2-5.4-5.8-5.8 3.8-.4 5.4-2 5.8-5.8Z" opacity=".9"/>
+          <path d="M124 93c.35 3.2 1.7 4.55 4.9 4.9-3.2.35-4.55 1.7-4.9 4.9-.35-3.2-1.7-4.55-4.9-4.9 3.2-.35 4.55-1.7 4.9-4.9Z" opacity=".8"/>
+          <path d="M85 272c.4 3.8 2 5.4 5.8 5.8-3.8.4-5.4 2-5.8 5.8-.4-3.8-2-5.4-5.8-5.8 3.8-.4 5.4-2 5.8-5.8Z" opacity=".9"/>
+          <path d="M117 292c.3 2.8 1.5 4 4.3 4.3-2.8.3-4 1.5-4.3 4.3-.3-2.8-1.5-4-4.3-4.3 2.8-.3 4-1.5 4.3-4.3Z" opacity=".8"/>
+        </g>
+        <circle cx="100" cy="238" r="3.1" fill="#fff0ad"/>
+        <path d="M100 235v6M97 238h6" stroke="#b47716" stroke-width=".8" stroke-linecap="round"/>
+      `,
+    },
+    {
+      id: 'top-rosa',
+      name: 'Blusa Rosa',
+      category: 'clothes',
+      zone: 'top',
+      pos: { x: 54, y: 170, w: 92, h: 78 },
+      svg: `
+        <defs>
+          <linearGradient id="topRoseA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffb6d4"/>
+            <stop offset="100%" stop-color="#ec6ba0"/>
+          </linearGradient>
+          <linearGradient id="topRoseB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffdce9"/>
+            <stop offset="100%" stop-color="#ff9dc3"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="65" cy="197" rx="12" ry="10" fill="url(#topRoseB)"/>
+        <ellipse cx="135" cy="197" rx="12" ry="10" fill="url(#topRoseB)"/>
+        <path d="M77 182c7 7 14 11 23 11s16-4 23-11l7 21 2 29c-10 6-21 9-32 9s-22-3-32-9l2-29 7-21Z" fill="url(#topRoseA)"/>
+        <path d="M75 230c10 6 17 8 25 8s15-2 25-8l1 8c-9 6-17 8-26 8s-17-2-26-8l1-8Z" fill="#c93c78" opacity=".92"/>
+        <path d="M70 197c2 5 6 8 11 9M130 197c-2 5-6 8-11 9" fill="none" stroke="#c33b77" stroke-width=".9" opacity=".45"/>
+        <path d="M92 186c3-3 7-4 8-1 1 3-2 6-5 7M108 186c-3-3-7-4-8-1-1 3 2 6 5 7" fill="#ffe5ef"/>
+        <circle cx="100" cy="192" r="2.4" fill="#ffd6e5"/>
+        <path d="M84 203c4 4 10 6 16 6s12-2 16-6" fill="none" stroke="#ffd9e8" stroke-width="1.1" stroke-linecap="round" opacity=".8"/>
+        <path d="M78 224c2 4 5 6 9 7M122 224c-2 4-5 6-9 7" fill="none" stroke="#ffdce9" stroke-width="1" stroke-linecap="round" opacity=".55"/>
+        <path d="M82 211c5 2 11 3 18 3s13-1 18-3" fill="none" stroke="#c83e77" stroke-width=".8" stroke-linecap="round" opacity=".3"/>
+        <path d="M117 171c.35 3.1 1.65 4.4 4.75 4.75-3.1.35-4.4 1.65-4.75 4.75-.35-3.1-1.65-4.4-4.75-4.75 3.1-.35 4.4-1.65 4.75-4.75Z" fill="#fff" opacity=".85"/>
+      `,
+    },
+    {
+      id: 'top-branca',
+      name: 'Blusa Branca',
+      category: 'clothes',
+      zone: 'top',
+      pos: { x: 54, y: 170, w: 92, h: 78 },
+      svg: `
+        <defs>
+          <linearGradient id="topWhiteA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="64%" stop-color="#fbf7fb"/>
+            <stop offset="100%" stop-color="#eadde9"/>
+          </linearGradient>
+          <linearGradient id="topWhiteB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#eeDFEF"/>
+          </linearGradient>
+        </defs>
+        <path d="M75 184l6 12c6-5 12-8 19-8s13 3 19 8l6-12 7 18 3 29c-11 6-23 9-35 9s-24-3-35-9l3-29 7-18Z" fill="url(#topWhiteA)"/>
+        <path d="M73 198c-1 7 0 15 2 23-6 1-11-2-13-7l-1-12c4-2 8-3 12-4ZM127 198c1 7 0 15-2 23 6 1 11-2 13-7l1-12c-4-2-8-3-12-4Z" fill="url(#topWhiteB)"/>
+        <path d="M81 190l10 7-6 12-10-7 6-12ZM119 190l-10 7 6 12 10-7-6-12Z" fill="#fff"/>
+        <path d="M81 190l10 7M119 190l-10 7" fill="none" stroke="#d8c6d8" stroke-width=".8"/>
+        <path d="M100 194v44" fill="none" stroke="#d8c6d8" stroke-width=".8"/>
+        <g fill="#d9a6bd">
+          <circle cx="100" cy="204" r="1.3"/><circle cx="100" cy="214" r="1.3"/><circle cx="100" cy="224" r="1.3"/><circle cx="100" cy="234" r="1.3"/>
+        </g>
+        <path d="M76 230c10 6 18 8 24 8s14-2 24-8l1 7c-9 6-17 8-25 8s-16-2-25-8l1-7Z" fill="#f5eaf4"/>
+        <path d="M76 231c10 4 16 6 24 6s14-2 24-6" fill="none" stroke="#d7c2d8" stroke-width=".7" opacity=".7"/>
+        <path d="M66 203c2 4 5 7 9 9M134 203c-2 4-5 7-9 9" fill="none" stroke="#d4bfd5" stroke-width=".9" opacity=".55"/>
+        <path d="M87 219c4 2 9 3 13 3s9-1 13-3" fill="none" stroke="#ffffff" stroke-width="1" opacity=".8"/>
+      `,
+    },
+    {
+      id: 'top-lilas',
+      name: 'Blusa Lilás',
+      category: 'clothes',
+      zone: 'top',
+      pos: { x: 54, y: 170, w: 92, h: 78 },
+      svg: `
+        <defs>
+          <linearGradient id="topLilacA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d8b9fb"/>
+            <stop offset="100%" stop-color="#a875df"/>
+          </linearGradient>
+          <linearGradient id="topLilacB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f0e2ff"/>
+            <stop offset="100%" stop-color="#c9a3ec"/>
+          </linearGradient>
+        </defs>
+        <path d="M69 194c6-7 18-11 31-11s25 4 31 11l3 11-35 8-33-8 3-11Z" fill="url(#topLilacB)"/>
+        <path d="M65 198c-2 6-1 13 3 18 4 5 11 6 16 3 4-3 3-8 0-12-2-3-5-6-7-10l-12 1ZM135 198c2 6 1 13-3 18-4 5-11 6-16 3-4-3-3-8 0-12 2-3 5-6 7-10l12 1Z" fill="url(#topLilacA)"/>
+        <path d="M74 205c7 4 17 6 26 6s19-2 26-6l4 10 1 14c-9 5-20 8-31 8s-22-3-31-8l1-14 4-10Z" fill="url(#topLilacA)"/>
+        <path d="M74 204c6 5 16 8 26 8s20-3 26-8" fill="none" stroke="#f4e7ff" stroke-width="1.2" stroke-linecap="round" opacity=".75"/>
+        <path d="M76 226c8 4 16 6 24 6s16-2 24-6l1 7c-8 5-16 7-25 7s-17-2-25-7l1-7Z" fill="#8c58c5" opacity=".8"/>
+        <path d="M100 203v24" fill="none" stroke="#e4cdfd" stroke-width="1.1" opacity=".65"/>
+        <path d="M95 227c-4 7-6 13-4 18 2 4 8 4 9 0 2 4 8 4 9 0 2-5 0-11-4-18h-10Z" fill="url(#topLilacB)"/>
+        <path d="M60 199c2 5 6 8 11 10M140 199c-2 5-6 8-11 10" fill="none" stroke="#dcc6f6" stroke-width=".9" opacity=".7"/>
+        <path d="M86 213c4 2 9 3 14 3s10-1 14-3" fill="none" stroke="#e7d5fa" stroke-width="1" stroke-linecap="round" opacity=".65"/>
+        <path d="M122 173c.35 3 1.6 4.25 4.6 4.6-3 .35-4.25 1.6-4.6 4.6-.35-3-1.6-4.25-4.6-4.6 3-.35 4.25-1.6 4.6-4.6Z" fill="#f6ecff" opacity=".9"/>
+      `,
+    },
+    {
+      id: 'saia-rodada',
+      name: 'Saia Rodada',
+      category: 'clothes',
+      zone: 'bottom',
+      pos: { x: 50, y: 220, w: 100, h: 126 },
+      svg: `
+        <defs>
+          <linearGradient id="skirtRoundA" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffb7d6"/>
+            <stop offset="100%" stop-color="#e75c97"/>
+          </linearGradient>
+          <linearGradient id="skirtRoundB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffd7e7"/>
+            <stop offset="100%" stop-color="#ff9bc4"/>
+          </linearGradient>
+        </defs>
+        <path d="M74 231c8 4 17 6 26 6s18-2 26-6l14 99c-12 8-27 12-40 12s-28-4-40-12l14-99Z" fill="url(#skirtRoundA)"/>
+        <path d="M72 232h56l3 12c-9 4-20 6-31 6s-22-2-31-6l3-12Z" fill="#cb3c78"/>
+        <path d="M60 320c12 8 27 12 40 12s28-4 40-12l-1 9c-11 9-25 13-39 13s-29-4-40-13l0-9Z" fill="url(#skirtRoundB)"/>
+        <path d="M65 308c11 7 23 10 35 10s24-3 35-10" fill="none" stroke="#ffc9df" stroke-width="1.1" stroke-linecap="round" opacity=".65"/>
+        <path d="M83 240c-4 24-7 51-8 77M100 241c0 25 0 52-1 78M117 240c4 24 7 51 8 77" fill="none" stroke="#c9467c" stroke-width=".9" stroke-linecap="round" opacity=".32"/>
+        <path d="M98 239c-6-5-13-4-14 1-1 4 4 7 10 7-3 4-2 7 1 9 3-1 5-4 5-7 2 3 5 5 8 4 2-3 1-6-2-9 6 1 11-2 10-6-1-4-8-5-14 1Z" fill="url(#skirtRoundB)"/>
+        <circle cx="100" cy="245" r="2" fill="#bd326d"/>
+        <path d="M71 264c4-2 8-3 12-4M129 264c-4-2-8-3-12-4" fill="none" stroke="#ffd8e8" stroke-width=".9" opacity=".55"/>
+        <path d="M78 291c.35 3 1.6 4.25 4.6 4.6-3 .35-4.25 1.6-4.6 4.6-.35-3-1.6-4.25-4.6-4.6 3-.35 4.25-1.6 4.6-4.6Z" fill="#fff" opacity=".72"/>
+        <path d="M122 278c.28 2.4 1.3 3.4 3.7 3.7-2.4.28-3.4 1.3-3.7 3.7-.28-2.4-1.3-3.4-3.7-3.7 2.4-.3 3.4-1.3 3.7-3.7Z" fill="#fff" opacity=".62"/>
+      `,
+    },
+    {
+      id: 'saia-plissada',
+      name: 'Saia Plissada',
+      category: 'clothes',
+      zone: 'bottom',
+      pos: { x: 50, y: 220, w: 100, h: 128 },
+      svg: `
+        <defs>
+          <linearGradient id="skirtPleatA" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#cbb0ee"/>
+            <stop offset="100%" stop-color="#8c5bc7"/>
+          </linearGradient>
+          <linearGradient id="skirtPleatB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#eadcff"/>
+            <stop offset="100%" stop-color="#b992e8"/>
+          </linearGradient>
+        </defs>
+        <path d="M73 231h54l13 105c-12 7-25 10-40 10s-28-3-40-10l13-105Z" fill="url(#skirtPleatA)"/>
+        <path d="M73 231h54l2 10H71l2-10Z" fill="#7542ac"/>
+        <g opacity=".55">
+          <path d="M78 240l-5 92 8 2 4-94h-7ZM92 238l-2 99 8 1 1-100h-7ZM108 238l2 99 8-1-2-98h-8ZM122 240l5 92 8-2-4-90h-9Z" fill="url(#skirtPleatB)"/>
+        </g>
+        <path d="M61 326c12 7 26 11 39 11s28-4 40-11l-1 8c-11 8-25 12-39 12s-28-4-39-12v-8Z" fill="#b78de2"/>
+        <path d="M67 328c11 5 22 8 33 8s23-3 33-8" fill="none" stroke="#eadcff" stroke-width="1" opacity=".65"/>
+        <path d="M73 258c8 3 18 4 27 4s19-1 27-4M69 288c10 4 21 6 31 6s22-2 31-6M64 319c12 4 24 6 36 6s24-2 36-6" fill="none" stroke="#6f399e" stroke-width=".8" stroke-linecap="round" opacity=".23"/>
+        <path d="M100 232v-1" fill="none"/>
+        <path d="M95 239c-4 12-5 24-4 36M105 239c4 12 5 24 4 36" fill="none" stroke="#e4d1fb" stroke-width=".9" stroke-linecap="round" opacity=".45"/>
+        <path d="M127 241c.35 3.1 1.65 4.4 4.75 4.75-3.1.35-4.4 1.65-4.75 4.75-.35-3.1-1.65-4.4-4.75-4.75 3.1-.35 4.4-1.65 4.75-4.75Z" fill="#f6ecff" opacity=".85"/>
+      `,
+    },
+    {
+      id: 'calca-rosa',
+      name: 'Calça Rosa',
+      category: 'clothes',
+      zone: 'bottom',
+      pos: { x: 54, y: 220, w: 92, h: 174 },
+      svg: `
+        <defs>
+          <linearGradient id="pantsRoseA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f7a8c8"/>
+            <stop offset="100%" stop-color="#cf4d85"/>
+          </linearGradient>
+          <linearGradient id="pantsRoseB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffcfe1"/>
+            <stop offset="100%" stop-color="#ef86b1"/>
+          </linearGradient>
+        </defs>
+        <path d="M72 232h56c4 16 3 31 1 47l8 106h-32l-5-84-5 84H63l8-106c-2-16-3-31 1-47Z" fill="url(#pantsRoseA)"/>
+        <path d="M72 232h56l1 12c-9 3-19 4-29 4s-20-1-29-4l1-12Z" fill="#b93b71"/>
+        <path d="M48 384h30l1-6H51l-3 6ZM122 384h30l-3-6h-27v6Z" fill="#b93b71"/>
+        <path d="M69 260c-2 33-4 73-5 118M131 260c2 33 4 73 5 118M100 292v8" fill="none" stroke="#ffd2e2" stroke-width="1" stroke-linecap="round" opacity=".5"/>
+        <path d="M79 244c5 2 11 3 21 3s16-1 21-3" fill="none" stroke="#f8b7d2" stroke-width=".9" opacity=".6"/>
+        <path d="M84 248c-1 15-1 29 0 43M116 248c1 15 1 29 0 43" fill="none" stroke="#a92f64" stroke-width=".7" opacity=".28"/>
+        <path d="M73 281c4 2 8 2 12 1M127 281c-4 2-8 2-12 1" fill="none" stroke="#ffd6e5" stroke-width=".8" opacity=".45"/>
+        <path d="M78 317c.3 2.8 1.5 4 4.3 4.3-2.8.3-4 1.5-4.3 4.3-.3-2.8-1.5-4-4.3-4.3 2.8-.3 4-1.5 4.3-4.3Z" fill="#ffe6f0" opacity=".75"/>
+        <path d="M124 340c.25 2.2 1.2 3.15 3.4 3.4-2.2.25-3.15 1.2-3.4 3.4-.25-2.2-1.2-3.15-3.4-3.4 2.2-.25 3.15-1.2 3.4-3.4Z" fill="#ffe6f0" opacity=".65"/>
+      `,
+    },
+    {
+      id: 'calca-jeans',
+      name: 'Calça Jeans',
+      category: 'clothes',
+      zone: 'bottom',
+      pos: { x: 54, y: 220, w: 92, h: 174 },
+      svg: `
+        <defs>
+          <linearGradient id="pantsDenimA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#8eb5db"/>
+            <stop offset="52%" stop-color="#5c87b6"/>
+            <stop offset="100%" stop-color="#365b88"/>
+          </linearGradient>
+          <linearGradient id="pantsDenimB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#a7c8e5"/>
+            <stop offset="100%" stop-color="#668cb8"/>
+          </linearGradient>
+          <linearGradient id="pantsDenimC" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#456e9e"/>
+            <stop offset="100%" stop-color="#2f5078"/>
+          </linearGradient>
+        </defs>
+        <path d="M72 232h56c4 16 3 31 1 47l8 106h-32l-5-84-5 84H63l8-106c-2-16-3-31 1-47Z" fill="url(#pantsDenimA)"/>
+        <path d="M72 232h56l1 13c-9 3-19 4-29 4s-20-1-29-4l1-13Z" fill="url(#pantsDenimC)"/>
+        <path d="M48 384h30l1-7H51l-3 7ZM122 384h30l-3-7h-27v7Z" fill="url(#pantsDenimB)"/>
+        <path d="M78 246c-2 17-3 34-4 51M122 246c2 17 3 34 4 51" fill="none" stroke="#c8ddf0" stroke-width=".9" stroke-dasharray="2 2" opacity=".7"/>
+        <path d="M69 260c-2 33-4 73-5 118M131 260c2 33 4 73 5 118M100 292v7" fill="none" stroke="#c7dcf0" stroke-width=".8" stroke-dasharray="2 2" opacity=".55"/>
+        <path d="M78 251c3 2 6 8 4 12-1 3-5 2-6-1l-1-8 3-3ZM122 251c-3 2-6 8-4 12 1 3 5 2 6-1l1-8-3-3Z" fill="#7096bf" opacity=".55"/>
+        <path d="M96 244c0 6 1 12 4 17 3 3 5-1 5-5l-1-12h-8Z" fill="#31557f" opacity=".65"/>
+        <path d="M79 276c4 2 8 2 12 1M127 276c-4 2-8 2-12 1" fill="none" stroke="#d7e7f5" stroke-width=".8" stroke-dasharray="1.5 2" opacity=".5"/>
+        <g fill="#c9dcef" opacity=".8">
+          <circle cx="99" cy="239" r="1.2"/><circle cx="105" cy="239" r="1.2"/>
+        </g>
+        <path d="M80 324c.3 2.8 1.5 4 4.3 4.3-2.8.3-4 1.5-4.3 4.3-.3-2.8-1.5-4-4.3-4.3 2.8-.3 4-1.5 4.3-4.3Z" fill="#e1eef9" opacity=".65"/>
+      `,
+    },
+    {
+      id: 'short-jeans',
+      name: 'Short Jeans',
+      category: 'clothes',
+      zone: 'bottom',
+      pos: { x: 56, y: 220, w: 88, h: 74 },
+      svg: `
+        <defs>
+          <linearGradient id="shortDenimA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#91b8dc"/>
+            <stop offset="52%" stop-color="#5b86b4"/>
+            <stop offset="100%" stop-color="#35587f"/>
+          </linearGradient>
+          <linearGradient id="shortDenimB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#a9c8e4"/>
+            <stop offset="100%" stop-color="#547da9"/>
+          </linearGradient>
+        </defs>
+        <path d="M72 232h56c3 13 4 27 4 40l-28 6-4-16-4 16-28-6c0-13 1-27 4-40Z" fill="url(#shortDenimA)"/>
+        <path d="M72 232h56l1 12c-9 3-19 4-29 4s-20-1-29-4l1-12Z" fill="#35587f"/>
+        <path d="M59 272c9 4 19 6 27 6l3 6-27 5-8-8 5-9ZM141 272c-9 4-19 6-27 6l-3 6 27 5 8-8-5-9Z" fill="url(#shortDenimB)"/>
+        <path d="M78 249c-2 7-2 14-1 21M122 249c2 7 2 14 1 21" fill="none" stroke="#d1e3f2" stroke-width=".8" stroke-dasharray="2 2" opacity=".65"/>
+        <path d="M78 252c3 1 5 6 3 9-1 2-4 1-5-1v-6l2-2ZM122 252c-3 1-5 6-3 9 1 2 4 1 5-1v-6l-2-2Z" fill="#6e95bd" opacity=".5"/>
+        <path d="M96 244c0 6 1 11 4 15 3 3 5-1 5-4l-1-11h-8Z" fill="#31547c" opacity=".7"/>
+        <path d="M72 262c9 3 18 4 28 4s19-1 28-4" fill="none" stroke="#cde0f0" stroke-width=".8" stroke-dasharray="1.5 2" opacity=".6"/>
+        <g fill="#d0e2f1" opacity=".75"><circle cx="99" cy="239" r="1.1"/><circle cx="105" cy="239" r="1.1"/></g>
+        <path d="M84 271c.28 2.4 1.3 3.4 3.7 3.7-2.4.28-3.4 1.3-3.7 3.7-.28-2.4-1.3-3.4-3.7-3.7 2.4-.3 3.4-1.3 3.7-3.7Z" fill="#e2eff9" opacity=".7"/>
+      `,
+    },
+    {
+      id: 'short-rosa',
+      name: 'Short Rosa',
+      category: 'clothes',
+      zone: 'bottom',
+      pos: { x: 56, y: 220, w: 88, h: 74 },
+      svg: `
+        <defs>
+          <linearGradient id="shortRoseA" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f9bed8"/>
+            <stop offset="100%" stop-color="#da5a90"/>
+          </linearGradient>
+          <linearGradient id="shortRoseB" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffd7e7"/>
+            <stop offset="100%" stop-color="#f599bf"/>
+          </linearGradient>
+        </defs>
+        <path d="M73 232h54c3 14 4 28 4 42l-27 6-4-15-4 15-27-6c0-14 1-28 4-42Z" fill="url(#shortRoseA)"/>
+        <path d="M73 232h54l1 11c-9 3-18 4-28 4s-19-1-28-4l1-11Z" fill="#b93c72"/>
+        <path d="M59 276c9 4 19 6 27 7l4 5-28 4-8-8 5-8ZM141 276c-9 4-19 6-27 7l-4 5 28 4 8-8-5-8Z" fill="url(#shortRoseB)"/>
+        <path d="M84 247l-5 26M100 246l0 27M116 247l5 26" fill="none" stroke="#ffd4e4" stroke-width=".9" opacity=".55"/>
+        <path d="M100 238c-5-4-11-3-12 1-1 3 3 6 8 6-2 3-1 6 2 7 2-1 4-3 4-6 2 3 4 4 6 3 2-2 1-5-1-7 5 0 9-3 8-6-1-3-7-3-12 1Z" fill="url(#shortRoseB)"/>
+        <circle cx="100" cy="243" r="1.8" fill="#bb3e73"/>
+        <path d="M77 246c8 2 15 3 23 3s15-1 23-3" fill="none" stroke="#ffd7e7" stroke-width=".8" opacity=".6"/>
+        <path d="M124 265c.3 2.7 1.4 3.8 4.1 4.1-2.7.3-3.8 1.4-4.1 4.1-.3-2.7-1.4-3.8-4.1-4.1 2.7-.3 3.8-1.4 4.1-4.1Z" fill="#fff" opacity=".65"/>
+      `,
+    },
+    {
+      id: 'sapato-rosa',
+      name: 'Scarpin Rosa',
+      category: 'shoes',
+      zone: 'feet',
+      pos: { x: 52, y: 380, w: 96, h: 40 },
+      svg: `
+        <defs>
+          <linearGradient id="shoeRoseA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffb7d3"/>
+            <stop offset="100%" stop-color="#d9427f"/>
+          </linearGradient>
+          <linearGradient id="shoeRoseB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffe0ec"/>
+            <stop offset="100%" stop-color="#ff9fc4"/>
+          </linearGradient>
+        </defs>
+        <path d="M78 391c2 7 2 13-3 17-4 3-9 4-8 7 1 2 8 3 16 1 7-2 11-6 11-11 0-5-2-9-3-14H78Z" fill="url(#shoeRoseA)"/>
+        <path d="M122 391c-2 7-2 13 3 17 4 3 9 4 8 7-1 2-8 3-16 1-7-2-11-6-11-11 0-5 2-9 3-14h13Z" fill="url(#shoeRoseA)"/>
+        <path d="M77 393c-1 7 0 13 3 18M123 393c1 7 0 13-3 18" fill="none" stroke="#ffd5e5" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
+        <path d="M66 409c7 3 17 3 24 0M110 409c7 3 17 3 24 0" fill="none" stroke="#9d2457" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M77 411l1 5M123 411l-1 5" fill="none" stroke="#9d2457" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M68 403c6 3 13 3 19 1M113 404c6 2 13 2 19-1" fill="none" stroke="#8e1c4d" stroke-width=".9" stroke-linecap="round" opacity=".7"/>
+        <path d="M82 399c-4-3-8-1-7 2 1 2 4 2 7 0M118 399c4-3 8-1 7 2-1 2-4 2-7 0" fill="#ffd6e5" stroke="#bd3a72" stroke-width=".55"/>
+        <circle cx="82" cy="400" r="1.5" fill="#ffe8f0"/>
+        <path d="M71 398c4 2 8 2 12 0" fill="none" stroke="#ffe2ee" stroke-width=".8" opacity=".65"/>
+        <path d="M129 386c.3 2.7 1.4 3.8 4.1 4.1-2.7.3-3.8 1.4-4.1 4.1-.3-2.7-1.4-3.8-4.1-4.1 2.7-.3 3.8-1.4 4.1-4.1Z" fill="#fff" opacity=".8"/>
+      `,
+    },
+    {
+      id: 'sapato-lilas',
+      name: 'Sandália Lilás',
+      category: 'shoes',
+      zone: 'feet',
+      pos: { x: 52, y: 380, w: 96, h: 40 },
+      svg: `
+        <defs>
+          <linearGradient id="shoeLilacA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e1c9ff"/>
+            <stop offset="100%" stop-color="#9662ce"/>
+          </linearGradient>
+          <linearGradient id="shoeLilacB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f6edff"/>
+            <stop offset="100%" stop-color="#c5a0ea"/>
+          </linearGradient>
+        </defs>
+        <path d="M65 406c8 4 18 4 25 2 3-1 4-4 1-6-6-2-12-4-17-9l-9 13Z" fill="url(#shoeLilacB)"/>
+        <path d="M135 406c-8 4-18 4-25 2-3-1-4-4-1-6 6-2 12-4 17-9l9 13Z" fill="url(#shoeLilacB)"/>
+        <path d="M76 392c-1 4 0 8 2 12M124 392c1 4 0 8-2 12" fill="none" stroke="url(#shoeLilacA)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M68 401c6 3 14 4 21 2M132 401c-6 3-14 4-21 2" fill="none" stroke="url(#shoeLilacA)" stroke-width="2.1" stroke-linecap="round"/>
+        <path d="M64 407c8 4 17 4 25 2M111 409c8 2 17 2 25-2" fill="none" stroke="#8c59ba" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M76 413l1 5M124 413l-1 5" fill="none" stroke="#7e4baa" stroke-width="1.1" stroke-linecap="round"/>
+        <circle cx="77" cy="392" r="1.7" fill="#f6dcff" stroke="#a675d1" stroke-width=".4"/>
+        <circle cx="123" cy="392" r="1.7" fill="#f6dcff" stroke="#a675d1" stroke-width=".4"/>
+        <path d="M84 392c3 1 6 1 9 0" fill="none" stroke="#f7edff" stroke-width=".8" opacity=".75"/>
+        <path d="M132 384c.3 2.7 1.4 3.8 4.1 4.1-2.7.3-3.8 1.4-4.1 4.1-.3-2.7-1.4-3.8-4.1-4.1 2.7-.3 3.8-1.4 4.1-4.1Z" fill="#fff" opacity=".8"/>
+      `,
+    },
+    {
+      id: 'sapato-dourado',
+      name: 'Sandália Dourada',
+      category: 'shoes',
+      zone: 'feet',
+      pos: { x: 52, y: 378, w: 96, h: 42 },
+      svg: `
+        <defs>
+          <linearGradient id="shoeGoldA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffe9a8"/>
+            <stop offset="45%" stop-color="#eac35d"/>
+            <stop offset="100%" stop-color="#b47b1c"/>
+          </linearGradient>
+          <linearGradient id="shoeGoldB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff4c8"/>
+            <stop offset="100%" stop-color="#e3b445"/>
+          </linearGradient>
+        </defs>
+        <path d="M65 406c8 4 18 4 25 2 3-1 4-4 1-6-6-2-12-4-17-9l-9 13Z" fill="url(#shoeGoldB)"/>
+        <path d="M135 406c-8 4-18 4-25 2-3-1-4-4-1-6 6-2 12-4 17-9l9 13Z" fill="url(#shoeGoldB)"/>
+        <path d="M74 384c-3 7-3 15 0 22M126 384c3 7 3 15 0 22" fill="none" stroke="url(#shoeGoldA)" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M67 391c8 3 16 3 23 0M110 391c7 3 15 3 23 0" fill="none" stroke="url(#shoeGoldA)" stroke-width="1.9" stroke-linecap="round"/>
+        <path d="M68 399c7 3 14 3 21 1M111 400c7 2 14 2 21-1" fill="none" stroke="url(#shoeGoldA)" stroke-width="1.7" stroke-linecap="round"/>
+        <path d="M64 407c8 4 18 4 25 2M111 409c7 2 17 2 25-2" fill="none" stroke="#a87218" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M76 413l1 5M124 413l-1 5" fill="none" stroke="#9f6b15" stroke-width="1.1" stroke-linecap="round"/>
+        <circle cx="78" cy="391" r="1.8" fill="#fff4c1" stroke="#b37e1e" stroke-width=".45"/>
+        <circle cx="122" cy="391" r="1.8" fill="#fff4c1" stroke="#b37e1e" stroke-width=".45"/>
+        <path d="M84 399c3 1 6 1 9 0" fill="none" stroke="#fff6ce" stroke-width=".8" opacity=".8"/>
+        <path d="M132 384c.3 2.7 1.4 3.8 4.1 4.1-2.7.3-3.8 1.4-4.1 4.1-.3-2.7-1.4-3.8-4.1-4.1 2.7-.3 3.8-1.4 4.1-4.1Z" fill="#fff9d9" opacity=".9"/>
+      `,
+    },
+    {
+      id: 'colar-perola',
+      name: 'Colar de Pérolas',
+      category: 'accessories',
+      zone: 'neck',
+      pos: { x: 78, y: 160, w: 44, h: 42 },
+      svg: `
+        <defs>
+          <radialGradient id="pearlA" cx="35%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="58%" stop-color="#fff7e8"/>
+            <stop offset="100%" stop-color="#e5cda6"/>
+          </radialGradient>
+          <linearGradient id="pearlGold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#e7c37a"/>
+            <stop offset="100%" stop-color="#b8872f"/>
+          </linearGradient>
+        </defs>
+        <path d="M85 174c3 15 12 22 15 22s12-7 15-22" fill="none" stroke="url(#pearlGold)" stroke-width=".8" opacity=".55"/>
+        <g fill="url(#pearlA)" stroke="#e3c99d" stroke-width=".35">
+          <circle cx="85.5" cy="176" r="2"/>
+          <circle cx="87.5" cy="180.5" r="2.1"/>
+          <circle cx="91" cy="185" r="2.15"/>
+          <circle cx="95" cy="188.5" r="2.15"/>
+          <circle cx="100" cy="190.2" r="2.25"/>
+          <circle cx="105" cy="188.5" r="2.15"/>
+          <circle cx="109" cy="185" r="2.15"/>
+          <circle cx="112.5" cy="180.5" r="2.1"/>
+          <circle cx="114.5" cy="176" r="2"/>
+        </g>
+        <circle cx="100" cy="199" r="4.2" fill="url(#pearlGold)" opacity=".26"/>
+        <path d="M100 195c1.2 2.5 2.6 4 5 5.2-2.4 1.2-3.8 2.7-5 5.2-1.2-2.5-2.6-4-5-5.2 2.4-1.2 3.8-2.7 5-5.2Z" fill="#fff8ea"/>
+        <circle cx="100" cy="200" r="1.7" fill="#fffdf4"/>
+        <path d="M85 173c4-1 8-1 11 0M115 173c-4-1-8-1-11 0" fill="none" stroke="#f4e0b8" stroke-width=".8" opacity=".8"/>
+        <circle cx="89.5" cy="179" r=".55" fill="#fff"/>
+        <circle cx="100" cy="188.2" r=".65" fill="#fff"/>
+      `,
+    },
+    {
+      id: 'colar-rosa',
+      name: 'Colar de Coração',
+      category: 'accessories',
+      zone: 'neck',
+      pos: { x: 78, y: 160, w: 44, h: 42 },
+      svg: `
+        <defs>
+          <linearGradient id="neckRoseA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffbfd6"/>
+            <stop offset="100%" stop-color="#d7497e"/>
+          </linearGradient>
+          <linearGradient id="neckRoseB" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#e3b153"/>
+            <stop offset="100%" stop-color="#b78022"/>
+          </linearGradient>
+        </defs>
+        <path d="M85 174c3 13 8 17 15 17s12-4 15-17" fill="none" stroke="url(#neckRoseB)" stroke-width=".9" stroke-linecap="round"/>
+        <path d="M84 173c4 2 8 3 11 3M116 173c-4 2-8 3-11 3" fill="none" stroke="#f3d99a" stroke-width=".8" opacity=".8"/>
+        <path d="M100 191c-5.8-4.8-9-8-9-11.5 0-3.4 5.1-4.2 9-.6 3.9-3.6 9-2.8 9 .6 0 3.5-3.2 6.7-9 11.5Z" fill="url(#neckRoseA)" stroke="#b72f66" stroke-width=".6"/>
+        <path d="M96 183c-.9-1.7-3.2-1.7-3.6.2-.3 1.5 1.3 2.8 3.6 4.4 2.3-1.6 3.9-2.9 3.6-4.4-.4-1.9-2.7-1.9-3.6-.2Z" fill="#ffdbe8" opacity=".7"/>
+        <circle cx="100" cy="173.5" r="1.5" fill="#f3d99a"/>
+        <circle cx="85" cy="173" r="1.3" fill="#f3d99a"/>
+        <circle cx="115" cy="173" r="1.3" fill="#f3d99a"/>
+        <path d="M100 189c.4 1.5 1.1 2.3 2.5 2.7" fill="none" stroke="#fff" stroke-width=".7" stroke-linecap="round" opacity=".8"/>
+      `,
+    },
+    {
+      id: 'oculos-sol',
+      name: 'Óculos de Sol',
+      category: 'accessories',
+      zone: 'head',
+      pos: { x: 62, y: 74, w: 76, h: 42 },
+      svg: `
+        <defs>
+          <linearGradient id="sunLensA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#594766"/>
+            <stop offset="50%" stop-color="#302538"/>
+            <stop offset="100%" stop-color="#17111c"/>
+          </linearGradient>
+          <linearGradient id="sunFrame" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f5d68f"/>
+            <stop offset="100%" stop-color="#b7832b"/>
+          </linearGradient>
+        </defs>
+        <path d="M64 94c2-4 5-6 8-6l1 3c-3 1-5 3-6 6l-3-3ZM136 94c-2-4-5-6-8-6l-1 3c3 1 5 3 6 6l3-3Z" fill="url(#sunFrame)"/>
+        <rect x="78.5" y="85.5" width="18" height="14.5" rx="5" fill="url(#sunLensA)" stroke="url(#sunFrame)" stroke-width="1.6"/>
+        <rect x="103.5" y="85.5" width="18" height="14.5" rx="5" fill="url(#sunLensA)" stroke="url(#sunFrame)" stroke-width="1.6"/>
+        <path d="M96.5 90.5c1-1.2 2-1.8 3.5-1.8s2.5.6 3.5 1.8" fill="none" stroke="url(#sunFrame)" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="m80.5 86.5 4-2M105.5 86.5l4-2" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".55"/>
+        <path d="M82.5 95.5c2.5 2 5 2 7.5.2M107.5 95.5c2.5 2 5 2 7.5.2" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round" opacity=".26"/>
+        <path d="M80 86.5c2-3.5 5-5 8-4.5M105 86.5c2-3.5 5-5 8-4.5" fill="none" stroke="#f4d18a" stroke-width="1.1" stroke-linecap="round" opacity=".8"/>
+        <circle cx="93" cy="91" r=".75" fill="#f7db9c" opacity=".8"/>
+        <circle cx="118" cy="91" r=".75" fill="#f7db9c" opacity=".8"/>
+      `,
+    },
+    {
+      id: 'oculos-coracao',
+      name: 'Óculos de Coração',
+      category: 'accessories',
+      zone: 'head',
+      pos: { x: 62, y: 74, w: 76, h: 42 },
+      svg: `
+        <defs>
+          <linearGradient id="heartLens" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffd9e8" stop-opacity=".82"/>
+            <stop offset="100%" stop-color="#ef85b3" stop-opacity=".58"/>
+          </linearGradient>
+          <linearGradient id="heartFrame" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff8eb9"/>
+            <stop offset="100%" stop-color="#bd386f"/>
+          </linearGradient>
+        </defs>
+        <path d="M64 93c2-4 5-6 8-6l1 3c-3 1-5 3-6 6l-3-3ZM136 93c-2-4-5-6-8-6l-1 3c3 1 5 3 6 6l3-3Z" fill="url(#heartFrame)"/>
+        <path d="M89 104.2c-6.4-4.7-9.9-8.1-9.9-12 0-3.8 5.6-4.8 9.9-.7 4.3-4.1 9.9-3.1 9.9.7 0 3.9-3.5 7.3-9.9 12Z" fill="url(#heartLens)" stroke="url(#heartFrame)" stroke-width="1.6"/>
+        <path d="M111 104.2c-6.4-4.7-9.9-8.1-9.9-12 0-3.8 5.6-4.8 9.9-.7 4.3-4.1 9.9-3.1 9.9.7 0 3.9-3.5 7.3-9.9 12Z" fill="url(#heartLens)" stroke="url(#heartFrame)" stroke-width="1.6"/>
+        <path d="M99 91.5c.8-1 1.8-1.4 3-1.4s2.2.4 3 1.4" fill="none" stroke="url(#heartFrame)" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M85 93c-1.2-1.6-3.4-1.6-4.2.2-.6 1.2.2 2.5 1.2 3.3M107 93c1.2-1.6 3.4-1.6 4.2.2.6 1.2-.2 2.5-1.2 3.3" fill="none" stroke="#fff" stroke-width=".9" stroke-linecap="round" opacity=".65"/>
+        <path d="M128 81c.3 2.7 1.4 3.8 4.1 4.1-2.7.3-3.8 1.4-4.1 4.1-.3-2.7-1.4-3.8-4.1-4.1 2.7-.3 3.8-1.4 4.1-4.1Z" fill="#ffb0cb" opacity=".9"/>
+      `,
+    },
+    {
+      id: 'laco',
+      name: 'Laço de Cetim',
+      category: 'accessories',
+      zone: 'head',
+      pos: { x: 56, y: 28, w: 88, h: 62 },
+      svg: `
+        <defs>
+          <linearGradient id="bowA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffb4d0"/>
+            <stop offset="100%" stop-color="#c93c75"/>
+          </linearGradient>
+          <linearGradient id="bowB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffdce9"/>
+            <stop offset="100%" stop-color="#f28bb5"/>
+          </linearGradient>
+        </defs>
+        <path d="M68 74c-2-17 3-29 15-34M132 74c2-17-3-29-15-34" fill="none" stroke="#d14980" stroke-width="2.2" stroke-linecap="round" opacity=".8"/>
+        <path d="M100 47c-9-10-26-12-28-1-2 10 10 17 24 19-2 7 1 13 4 17 3-4 6-10 4-17 14-2 26-9 24-19-2-11-19-9-28 1Z" fill="url(#bowA)"/>
+        <path d="M100 48c-7-6-19-8-21-2-1 5 7 10 18 12 5 1 7 8 7 13 1-7 4-12 9-14 11-3 17-8 15-13-2-5-14-2-21 4h-7Z" fill="url(#bowB)" opacity=".55"/>
+        <path d="M100 49c-2 6-2 14 0 20M95 55c-3-2-6-5-7-8M105 55c3-2 6-5 7-8" fill="none" stroke="#a42b60" stroke-width=".9" stroke-linecap="round" opacity=".5"/>
+        <path d="M97 59c-3 8-8 14-13 20 5 1 10-1 13-5M103 59c3 8 8 14 13 20-5 1-10-1-13-5" fill="url(#bowA)"/>
+        <ellipse cx="100" cy="59" rx="7.2" ry="7.8" fill="#d84d82" stroke="#b63266" stroke-width=".7"/>
+        <ellipse cx="98.5" cy="56.8" rx="3" ry="3.5" fill="#ffd3e3" opacity=".55"/>
+        <path d="M86 43c3-2 6-2 9-1M114 43c-3-2-6-2-9-1" fill="none" stroke="#ffdce9" stroke-width="1" stroke-linecap="round" opacity=".7"/>
+        <path d="M131 34c.35 3.1 1.65 4.4 4.75 4.75-3.1.35-4.4 1.65-4.75 4.75-.35-3.1-1.65-4.4-4.75-4.75 3.1-.35 4.4-1.65 4.75-4.75Z" fill="#ffe0eb" opacity=".9"/>
+      `,
+    },
+    {
+      id: 'tiara',
+      name: 'Tiara Dourada',
+      category: 'accessories',
+      zone: 'head',
+      pos: { x: 56, y: 28, w: 88, h: 58 },
+      svg: `
+        <defs>
+          <linearGradient id="tiaraA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff0b6"/>
+            <stop offset="48%" stop-color="#eac45b"/>
+            <stop offset="100%" stop-color="#b37b1e"/>
+          </linearGradient>
+          <radialGradient id="tiaraGem" cx="35%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#fff5ff"/>
+            <stop offset="35%" stop-color="#e6b9ff"/>
+            <stop offset="100%" stop-color="#9652c9"/>
+          </radialGradient>
+        </defs>
+        <path d="M68 74c6-10 17-16 32-16s26 6 32 16" fill="none" stroke="url(#tiaraA)" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M74 68c8-7 17-10 26-10s18 3 26 10" fill="none" stroke="#fff1b2" stroke-width="1.2" stroke-linecap="round" opacity=".6"/>
+        <path d="M100 39l8 18-8 8-8-8 8-18Z" fill="url(#tiaraA)"/>
+        <path d="M100 38l2.7 13.3 8.3 5.7-8 6-3 10-3-10-8-6 8.3-5.7L100 38Z" fill="url(#tiaraGem)" stroke="url(#tiaraA)" stroke-width="1"/>
+        <path d="M81 53l4 12-7 5-4-12 7-5ZM119 53l-4 12 7 5 4-12-7-5Z" fill="url(#tiaraA)"/>
+        <circle cx="81" cy="58" r="2.1" fill="#ffd8fb" stroke="#ba8b2c" stroke-width=".5"/>
+        <circle cx="119" cy="58" r="2.1" fill="#ffd8fb" stroke="#ba8b2c" stroke-width=".5"/>
+        <circle cx="100" cy="51" r="2.4" fill="#fff7ff"/>
+        <path d="M71 67c-.4 2.7-1 4.6-2 6" fill="none" stroke="#e4b74f" stroke-width="1" stroke-linecap="round" opacity=".5"/>
+        <path d="M130 64c.35 3.1 1.65 4.4 4.75 4.75-3.1.35-4.4 1.65-4.75 4.75-.35-3.1-1.65-4.4-4.75-4.75 3.1-.35 4.4-1.65 4.75-4.75Z" fill="#fff3be" opacity=".9"/>
+        <path d="M66 77c.28 2.4 1.3 3.4 3.7 3.7-2.4.28-3.4 1.3-3.7 3.7-.28-2.4-1.3-3.4-3.7-3.7 2.4-.3 3.4-1.3 3.7-3.7Z" fill="#fff3be" opacity=".75"/>
+      `,
+    },
+    {
+      id: 'bolsa-rosa',
+      name: 'Bolsa Rosa',
+      category: 'accessories',
+      zone: 'hand',
+      pos: { x: 116, y: 222, w: 64, h: 74 },
+      svg: `
+        <defs>
+          <linearGradient id="bagRoseA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffc0d8"/>
+            <stop offset="54%" stop-color="#ed77a6"/>
+            <stop offset="100%" stop-color="#c63d76"/>
+          </linearGradient>
+          <linearGradient id="bagRoseB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffe2ec"/>
+            <stop offset="100%" stop-color="#f6a3c3"/>
+          </linearGradient>
+          <linearGradient id="bagChain" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#f1d38d"/>
+            <stop offset="100%" stop-color="#b7852d"/>
+          </linearGradient>
+        </defs>
+        <path d="M141 252c-1-10 3-17 9-17s10 7 9 17" fill="none" stroke="url(#bagChain)" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M135 252c6-4 13-6 21-6l6 5v25c-2 5-7 8-13 9-6 1-11-1-15-4l1-29Z" fill="url(#bagRoseA)"/>
+        <path d="M135 252c6-4 13-6 21-6l6 5-3 6c-6-3-13-4-24-2v-3Z" fill="url(#bagRoseB)"/>
+        <path d="M135 263c7 4 14 5 21 3 3-1 5-3 6-5l-1 15c-2 5-7 8-13 9-5 1-10-1-14-4l1-18Z" fill="#b93369" opacity=".22"/>
+        <g opacity=".4" fill="none" stroke="#ffd5e4" stroke-width=".8">
+          <path d="M142 257l8 4-8 4M154 256l-7 5 7 5"/>
+          <path d="M149 253v22"/>
+        </g>
+        <path d="M149 253v6" stroke="#c1356e" stroke-width="1" opacity=".55"/>
+        <circle cx="149" cy="253" r="2.2" fill="#ffe4ee" stroke="#bb356b" stroke-width=".5"/>
+        <path d="M133 274c5 2 10 2 15 0" fill="none" stroke="#ffd7e5" stroke-width=".8" opacity=".7"/>
+        <path d="M160 254c.3 2.7 1.4 3.8 4.1 4.1-2.7.3-3.8 1.4-4.1 4.1-.3-2.7-1.4-3.8-4.1-4.1 2.7-.3 3.8-1.4 4.1-4.1Z" fill="#fff" opacity=".85"/>
+      `,
+    },
+    {
+      id: 'bolsa-lilas',
+      name: 'Bolsa Lilás',
+      category: 'accessories',
+      zone: 'hand',
+      pos: { x: 116, y: 222, w: 64, h: 74 },
+      svg: `
+        <defs>
+          <linearGradient id="bagLilacA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d9befb"/>
+            <stop offset="100%" stop-color="#9964d1"/>
+          </linearGradient>
+          <linearGradient id="bagLilacB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f2e6ff"/>
+            <stop offset="100%" stop-color="#c5a0e9"/>
+          </linearGradient>
+          <linearGradient id="bagLilacChain" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#edd08a"/>
+            <stop offset="100%" stop-color="#ae7d28"/>
+          </linearGradient>
+        </defs>
+        <path d="M139 249c0-10 5-16 11-16s11 6 11 16" fill="none" stroke="url(#bagLilacChain)" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M134 251c6-4 14-6 24-5l5 5-1 27c-2 5-8 8-14 8s-12-2-16-6l2-29Z" fill="url(#bagLilacA)"/>
+        <path d="M134 251c6-4 14-6 24-5l5 5-2 7c-7-4-16-4-29-2l2-5Z" fill="url(#bagLilacB)"/>
+        <path d="M133 265c8 4 17 5 26 2l-1 13c-2 5-8 8-14 8-5 0-9-1-13-4l2-19Z" fill="#6f3fa5" opacity=".2"/>
+        <path d="M148 255c-3-3-7-3-8 0-1 2 2 4 6 5-2 2-1 5 1 6 2-1 3-3 3-5 2 2 5 3 6 2 1-2 0-4-2-5 4-1 6-3 5-5-1-2-5-2-8 1-1-1-2-1-3 1Z" fill="#e9d4ff" opacity=".78"/>
+        <path d="M151 253v-1M134 269c9 4 17 5 25 2" fill="none" stroke="#f0e3ff" stroke-width=".8" opacity=".65"/>
+        <circle cx="148" cy="253" r="1.8" fill="#f5e9ff"/>
+        <path d="M158 258c.32 2.8 1.5 4 4.3 4.3-2.8.3-4 1.5-4.3 4.3-.3-2.8-1.5-4-4.3-4.3 2.8-.3 4-1.5 4.3-4.3Z" fill="#f9f1ff" opacity=".85"/>
+      `,
+    },
+    {
+      id: 'bolsa-dourada',
+      name: 'Bolsa Dourada',
+      category: 'accessories',
+      zone: 'hand',
+      pos: { x: 114, y: 220, w: 68, h: 78 },
+      svg: `
+        <defs>
+          <linearGradient id="bagGoldA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff0b6"/>
+            <stop offset="45%" stop-color="#e7bd52"/>
+            <stop offset="100%" stop-color="#ad731a"/>
+          </linearGradient>
+          <linearGradient id="bagGoldB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff9d9"/>
+            <stop offset="100%" stop-color="#d7a63a"/>
+          </linearGradient>
+          <linearGradient id="bagGoldHandle" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#f5dda2"/>
+            <stop offset="100%" stop-color="#a8741c"/>
+          </linearGradient>
+        </defs>
+        <path d="M136 253c-2-10 3-17 9-17s12 7 11 17" fill="none" stroke="url(#bagGoldHandle)" stroke-width="1.7" stroke-linecap="round"/>
+        <rect x="134" y="251" width="33" height="32" rx="7" fill="url(#bagGoldA)"/>
+        <path d="M134 256h33l-2 9c-10-4-20-4-29 0l-2-9Z" fill="url(#bagGoldB)" opacity=".8"/>
+        <path d="M134 270c10 4 22 4 33 0v6c0 4-3 7-7 7h-19c-4 0-7-3-7-7v-6Z" fill="#9e6815" opacity=".2"/>
+        <rect x="147" y="261" width="7" height="5" rx="1.8" fill="#fff4c4" stroke="#a8741c" stroke-width=".6"/>
+        <path d="M150.5 262v3" stroke="#b17b1e" stroke-width=".8"/>
+        <path d="M139 277c6 1 12 1 18 0" fill="none" stroke="#ffe9a3" stroke-width=".7" opacity=".65"/>
+        <path d="M165 257c.35 3.1 1.65 4.4 4.75 4.75-3.1.35-4.4 1.65-4.75 4.75-.35-3.1-1.65-4.4-4.75-4.75 3.1-.35 4.4-1.65 4.75-4.75Z" fill="#fff8d7" opacity=".9"/>
+        <path d="M128 273c.28 2.4 1.3 3.4 3.7 3.7-2.4.28-3.4 1.3-3.7 3.7-.28-2.4-1.3-3.4-3.7-3.7 2.4-.3 3.4-1.3 3.7-3.7Z" fill="#fff8d7" opacity=".75"/>
+      `,
+    },
+    {
+      id: 'chapeu-palha',
+      name: 'Chapéu de Palha',
+      category: 'accessories',
+      zone: 'head',
+      pos: { x: 44, y: 12, w: 112, h: 92 },
+      svg: `
+        <defs>
+          <linearGradient id="hatStrawA" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f8e5b8"/>
+            <stop offset="55%" stop-color="#e6c27d"/>
+            <stop offset="100%" stop-color="#bb8b43"/>
+          </linearGradient>
+          <linearGradient id="hatStrawB" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fbebc4"/>
+            <stop offset="55%" stop-color="#e9c986"/>
+            <stop offset="100%" stop-color="#c79a51"/>
+          </linearGradient>
+          <linearGradient id="hatRibbon" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffb0cd"/>
+            <stop offset="100%" stop-color="#cc497e"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="100" cy="64" rx="46" ry="13.5" fill="url(#hatStrawA)"/>
+        <path d="M68 60c1-19 13-31 32-31s31 12 32 31c-14 8-50 8-64 0Z" fill="url(#hatStrawB)"/>
+        <path d="M69 56c9 16 53 16 62 0l1 6c-12 16-52 16-64 0l1-6Z" fill="url(#hatRibbon)"/>
+        <path d="M60 66c9 3 20 5 40 5s31-2 40-5" fill="none" stroke="#a87936" stroke-width=".8" opacity=".42"/>
+        <path d="M72 72c7 2 17 3 28 3s21-1 28-3" fill="none" stroke="#fff3cd" stroke-width=".8" opacity=".55"/>
+        <path d="M80 42c2-6 8-10 17-11M121 42c-2-6-8-10-17-11" fill="none" stroke="#fff3ce" stroke-width="1" stroke-linecap="round" opacity=".6"/>
+        <path d="M125 52c-5-2-10 0-10 5 0 4 5 6 10 3 5 3 10 1 10-3 0-5-5-7-10-5Z" fill="url(#hatRibbon)"/>
+        <circle cx="125" cy="57" r="2.4" fill="#e66599"/>
+        <path d="M125 57c-2 5-3 9-1 13M125 57c2 5 4 8 2 12" fill="none" stroke="#bb3f71" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M79 52c5-2 10-2 15 0M106 52c5-2 10-2 15 0" fill="none" stroke="#f5d79b" stroke-width=".9" opacity=".65"/>
+        <path d="M75 49c.3 2.7 1.4 3.8 4.1 4.1-2.7.3-3.8 1.4-4.1 4.1-.3-2.7-1.4-3.8-4.1-4.1 2.7-.3 3.8-1.4 4.1-4.1Z" fill="#fff7d9" opacity=".75"/>
+      `,
+    },
+    {
+      id: 'coroa-flores',
+      name: 'Coroa de Flores',
+      category: 'accessories',
+      zone: 'head',
+      pos: { x: 52, y: 30, w: 96, h: 70 },
+      svg: `
+        <defs>
+          <radialGradient id="flowerPinkA" cx="35%" cy="30%" r="72%">
+            <stop offset="0%" stop-color="#ffd9e8"/>
+            <stop offset="55%" stop-color="#ff96bc"/>
+            <stop offset="100%" stop-color="#d8467d"/>
+          </radialGradient>
+          <radialGradient id="flowerCream" cx="35%" cy="30%" r="72%">
+            <stop offset="0%" stop-color="#fffdf1"/>
+            <stop offset="100%" stop-color="#f2d59b"/>
+          </radialGradient>
+          <linearGradient id="flowerLeaf" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#a9cc8b"/>
+            <stop offset="100%" stop-color="#5d8e52"/>
+          </linearGradient>
+        </defs>
+        <path d="M68 77c7-18 18-29 32-29s26 11 33 29" fill="none" stroke="#7fa26a" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M77 67c-5-3-9-1-9 3 0 3 4 5 8 2M104 54c4-3 8-1 8 3 0 3-4 4-8 1M124 63c5-2 8 1 7 4-1 3-5 3-8 0" fill="url(#flowerLeaf)" opacity=".9"/>
+        <g fill="url(#flowerPinkA)">
+          <circle cx="66" cy="69" r="4.1"/><circle cx="72" cy="64" r="4.1"/><circle cx="70" cy="74" r="4.1"/><circle cx="63" cy="75" r="4.1"/><circle cx="61" cy="68" r="4.1"/>
+          <circle cx="88" cy="57" r="3.8"/><circle cx="93" cy="52" r="3.8"/><circle cx="95" cy="59" r="3.8"/><circle cx="89" cy="63" r="3.8"/><circle cx="84" cy="61" r="3.8"/>
+          <circle cx="126" cy="61" r="3.9"/><circle cx="131" cy="65" r="3.9"/><circle cx="128" cy="70" r="3.9"/><circle cx="122" cy="69" r="3.9"/><circle cx="121" cy="63" r="3.9"/>
+          <circle cx="138" cy="73" r="3.4"/><circle cx="142" cy="78" r="3.4"/><circle cx="137" cy="82" r="3.4"/><circle cx="132" cy="78" r="3.4"/>
+        </g>
+        <g fill="url(#flowerCream)">
+          <circle cx="106" cy="51" r="4.4"/><circle cx="112" cy="47" r="4.4"/><circle cx="116" cy="53" r="4.4"/><circle cx="111" cy="59" r="4.4"/><circle cx="104" cy="57" r="4.4"/>
+        </g>
+        <g fill="#e7b84d">
+          <circle cx="67" cy="69" r="2.3"/><circle cx="89" cy="58" r="2.1"/><circle cx="109" cy="53" r="2.5"/><circle cx="126" cy="65" r="2.2"/><circle cx="137" cy="77" r="2"/>
+        </g>
+        <g fill="none" stroke="#fff6dc" stroke-width=".65" opacity=".7">
+          <path d="M65 66c2-1 4-1 5 0M86 54c2-1 3-1 5 0M104 48c2-1 4-1 5 0"/>
+        </g>
+        <path d="M55 63c.3 2.7 1.4 3.8 4.1 4.1-2.7.3-3.8 1.4-4.1 4.1-.3-2.7-1.4-3.8-4.1-4.1 2.7-.3 3.8-1.4 4.1-4.1Z" fill="#ffeaf2" opacity=".85"/>
+      `,
+    },
+    {
+      id: 'boina-rosa',
+      name: 'Boina Rosa',
+      category: 'accessories',
+      zone: 'head',
+      pos: { x: 56, y: 24, w: 88, h: 70 },
+      svg: `
+        <defs>
+          <linearGradient id="beretA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#f9b6d1"/>
+            <stop offset="55%" stop-color="#e86e9f"/>
+            <stop offset="100%" stop-color="#b7356b"/>
+          </linearGradient>
+          <linearGradient id="beretB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffd8e7"/>
+            <stop offset="100%" stop-color="#ef8bb1"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="102" cy="57" rx="33" ry="18" fill="url(#beretA)" transform="rotate(-7 102 57)"/>
+        <path d="M70 57c7 9 24 13 39 10 11-2 18-6 22-11 2 7-2 13-11 17-12 5-31 5-41 1-8-3-11-10-9-17Z" fill="url(#beretB)"/>
+        <path d="M101 40c0-6 3-10 8-12" fill="none" stroke="#b7356b" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="109" cy="27" r="3.4" fill="url(#beretA)"/>
+        <path d="M84 44c9-5 20-6 30-3" fill="none" stroke="#ffe3ed" stroke-width="1.3" stroke-linecap="round" opacity=".65"/>
+        <path d="M75 60c8 4 18 6 29 5" fill="none" stroke="#9c2a5a" stroke-width=".8" opacity=".3"/>
+        <path d="M130 48c.35 3.1 1.65 4.4 4.75 4.75-3.1.35-4.4 1.65-4.75 4.75-.35-3.1-1.65-4.4-4.75-4.75 3.1-.35 4.4-1.65 4.75-4.75Z" fill="#ffe5ef" opacity=".85"/>
+      `,
+    },
+    {
+      id: 'brinco-argola',
+      name: 'Brincos de Argola',
+      category: 'accessories',
+      zone: 'earrings',
+      pos: { x: 48, y: 78, w: 104, h: 54 },
+      svg: `
+        <defs>
+          <linearGradient id="hoopGold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffeaa9"/>
+            <stop offset="48%" stop-color="#e7bd59"/>
+            <stop offset="100%" stop-color="#b27a1e"/>
+          </linearGradient>
+        </defs>
+        <circle cx="67" cy="99" r="2.2" fill="url(#hoopGold)"/>
+        <circle cx="133" cy="99" r="2.2" fill="url(#hoopGold)"/>
+        <path d="M67 102c-7 2-11 8-10 14 1 6 8 10 14 8 7-2 10-9 7-15" fill="none" stroke="url(#hoopGold)" stroke-width="1.9" stroke-linecap="round"/>
+        <path d="M133 102c7 2 11 8 10 14-1 6-8 10-14 8-7-2-10-9-7-15" fill="none" stroke="url(#hoopGold)" stroke-width="1.9" stroke-linecap="round"/>
+        <path d="M61 111c1-3 3-5 6-6M139 111c-1-3-3-5-6-6" fill="none" stroke="#fff3c5" stroke-width=".8" stroke-linecap="round" opacity=".8"/>
+        <path d="M68 106c-.3 2.7-1.4 3.8-4.1 4.1 2.7.3 3.8 1.4 4.1 4.1.3-2.7 1.4-3.8 4.1-4.1-2.7-.3-3.8-1.4-4.1-4.1Z" fill="#fff4c5" opacity=".8"/>
+        <path d="M132 106c-.3 2.7-1.4 3.8-4.1 4.1 2.7.3 3.8 1.4 4.1 4.1.3-2.7 1.4-3.8 4.1-4.1-2.7-.3-3.8-1.4-4.1-4.1Z" fill="#fff4c5" opacity=".8"/>
+      `,
+    },
+    {
+      id: 'brinco-coracao',
+      name: 'Brincos de Coração',
+      category: 'accessories',
+      zone: 'earrings',
+      pos: { x: 48, y: 78, w: 104, h: 56 },
+      svg: `
+        <defs>
+          <linearGradient id="dropRose" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffc6dc"/>
+            <stop offset="100%" stop-color="#d9487d"/>
+          </linearGradient>
+          <linearGradient id="dropGold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#f6d990"/>
+            <stop offset="100%" stop-color="#bd8b31"/>
+          </linearGradient>
+        </defs>
+        <path d="M67 100v6M133 100v6" fill="none" stroke="url(#dropGold)" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="67" cy="99" r="2.1" fill="url(#dropGold)"/>
+        <circle cx="133" cy="99" r="2.1" fill="url(#dropGold)"/>
+        <path d="M67 122c-4.8-3.8-7.3-6.3-7.3-9.2 0-2.7 4-3.3 7.3-.6 3.3-2.7 7.3-2.1 7.3.6 0 2.9-2.5 5.4-7.3 9.2Z" fill="url(#dropRose)" stroke="#b52f63" stroke-width=".6"/>
+        <path d="M133 122c-4.8-3.8-7.3-6.3-7.3-9.2 0-2.7 4-3.3 7.3-.6 3.3-2.7 7.3-2.1 7.3.6 0 2.9-2.5 5.4-7.3 9.2Z" fill="url(#dropRose)" stroke="#b52f63" stroke-width=".6"/>
+        <path d="M64 112c.5-1.2 1.7-1.4 2.6-.7M130 112c.5-1.2 1.7-1.4 2.6-.7" fill="none" stroke="#ffe2ec" stroke-width=".6" stroke-linecap="round" opacity=".8"/>
+        <circle cx="67" cy="106" r=".8" fill="#fff1c0"/>
+        <circle cx="133" cy="106" r=".8" fill="#fff1c0"/>
+      `,
+    },
+    {
+      id: 'gargantilha-cereja',
+      name: 'Gargantilha de Cereja',
+      category: 'accessories',
+      zone: 'neck',
+      pos: { x: 76, y: 160, w: 48, h: 48 },
+      svg: `
+        <defs>
+          <radialGradient id="cherryRed" cx="32%" cy="28%" r="70%">
+            <stop offset="0%" stop-color="#ff8a93"/>
+            <stop offset="45%" stop-color="#e34359"/>
+            <stop offset="100%" stop-color="#9e1f39"/>
+          </radialGradient>
+          <linearGradient id="chokerLeaf" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#a7c987"/>
+            <stop offset="100%" stop-color="#4e824d"/>
+          </linearGradient>
+        </defs>
+        <path d="M86 174c4 4 24 4 28 0" fill="none" stroke="#57233f" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M86 173c4-2 9-3 14-3s10 1 14 3" fill="none" stroke="#d6a3bc" stroke-width=".7" opacity=".6"/>
+        <path d="M100 179c-2 4-2 8 0 11M101 179c3 4 3 7 1 10" fill="none" stroke="url(#chokerLeaf)" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M101 180c4-4 7-5 10-4-1 4-4 6-9 6M100 181c-4-3-7-3-9-1 2 3 5 4 8 3" fill="url(#chokerLeaf)" opacity=".9"/>
+        <circle cx="96" cy="190" r="3.6" fill="url(#cherryRed)"/>
+        <circle cx="105" cy="192" r="3.1" fill="url(#cherryRed)"/>
+        <path d="M94.5 188c.6-1 1.5-1.3 2.3-.9M103.3 190.5c.5-.8 1.2-1.1 2-.8" fill="none" stroke="#ffd4d6" stroke-width=".7" stroke-linecap="round" opacity=".85"/>
+        <circle cx="100" cy="174.5" r="1.3" fill="#d9a03b"/>
+      `,
+    },
+    {
+      id: 'bolsa-coracao',
+      name: 'Bolsa Coração',
+      category: 'accessories',
+      zone: 'hand',
+      pos: { x: 112, y: 220, w: 68, h: 78 },
+      svg: `
+        <defs>
+          <linearGradient id="bagHeartA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffc2d9"/>
+            <stop offset="52%" stop-color="#ef7ca8"/>
+            <stop offset="100%" stop-color="#c63c73"/>
+          </linearGradient>
+          <linearGradient id="bagHeartB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffe3ed"/>
+            <stop offset="100%" stop-color="#f5a5c2"/>
+          </linearGradient>
+          <linearGradient id="bagHeartGold" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#f6d88d"/>
+            <stop offset="100%" stop-color="#b98429"/>
+          </linearGradient>
+        </defs>
+        <path d="M142 252c0-10 3-16 8-16s8 6 8 16" fill="none" stroke="url(#bagHeartGold)" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M149 287c-12-8-18-14-18-21 0-7 9-9 18-2 9-7 18-5 18 2 0 7-6 13-18 21Z" fill="url(#bagHeartA)"/>
+        <path d="M149 283c-8-5-13-9-15-13 0-5 6-6 15-1 9-5 15-4 15 1-2 4-7 8-15 13Z" fill="url(#bagHeartB)" opacity=".45"/>
+        <path d="M140 266c6 4 12 6 18 5 3-1 6-2 8-4" fill="none" stroke="#b93166" stroke-width=".9" stroke-linecap="round" opacity=".45"/>
+        <path d="M149 267c-2-2-5-2-5 .2 0 1.8 2 3.3 5 5 3-1.7 5-3.2 5-5 0-2.2-3-2.2-5-.2Z" fill="#ffe4ee"/>
+        <circle cx="142" cy="254" r="1.4" fill="#ffe5b1"/>
+        <circle cx="156" cy="254" r="1.4" fill="#ffe5b1"/>
+        <path d="M165 252c.3 2.7 1.4 3.8 4.1 4.1-2.7.3-3.8 1.4-4.1 4.1-.3-2.7-1.4-3.8-4.1-4.1 2.7-.3 3.8-1.4 4.1-4.1Z" fill="#fff" opacity=".85"/>
+      `,
+    },
+  ];
+
+  const HAIR_COLORS = [
+    {
+      id: 'castanho',
+      name: 'Castanho',
+      base: ['#a86a4a', '#7e4b32', '#5a3020'],
+      shine: ['#d5a07b', '#b27b58', '#8b563b'],
+      lock: ['#8f593e', '#5b3020'],
+    },
+    {
+      id: 'preto',
+      name: 'Preto',
+      base: ['#4b352c', '#2b1b16', '#160e0b'],
+      shine: ['#765648', '#4d352d', '#2b1d18'],
+      lock: ['#3b2620', '#1c110d'],
+    },
+    {
+      id: 'loiro',
+      name: 'Loiro',
+      base: ['#f5d89a', '#dfb567', '#b77f3a'],
+      shine: ['#fff0c0', '#f0cc83', '#c99f55'],
+      lock: ['#e7c077', '#b7833f'],
+    },
+    {
+      id: 'ruivo',
+      name: 'Ruivo',
+      base: ['#df8250', '#bd562d', '#81311a'],
+      shine: ['#f6b484', '#dd8d5a', '#b05530'],
+      lock: ['#c66a39', '#84371d'],
+    },
+    {
+      id: 'rosa',
+      name: 'Rosa',
+      base: ['#f7a6c8', '#db6e9c', '#a93f70'],
+      shine: ['#ffd2e3', '#f49bbd', '#d56f98'],
+      lock: ['#ef8db6', '#b04b77'],
+    },
+    {
+      id: 'lilas',
+      name: 'Lilás',
+      base: ['#c8a6ed', '#9c6fcd', '#6e4499'],
+      shine: ['#e9d6ff', '#c4a3e8', '#9f76c7'],
+      lock: ['#ac81d7', '#764ea2'],
+    },
+    {
+      id: 'azul',
+      name: 'Azul',
+      base: ['#9abfe0', '#6489b1', '#3f5d81'],
+      shine: ['#d0e5f7', '#9abfe0', '#6b8fb4'],
+      lock: ['#7fa3c6', '#4c6b8c'],
+    },
+  ];
+
+  const DEFAULT_HAIR = 'castanho';
+
+  const byId = new Map(ITEMS.map((item) => [item.id, item]));
+  const byCategory = {
+    clothes: ITEMS.filter((item) => item.category === 'clothes'),
+    shoes: ITEMS.filter((item) => item.category === 'shoes'),
+    accessories: ITEMS.filter((item) => item.category === 'accessories'),
+  };
+  const byZone = ITEMS.reduce((map, item) => {
+    (map[item.zone] ||= []).push(item);
+    return map;
+  }, {});
+
+  const state = {
+    equipped: {},
+    lookCount: 0,
+    history: [],
+    lastLook: null,
+    lastHair: null,
+    hairColor: DEFAULT_HAIR,
+    soundOn: true,
+    filter: 'all',
+    saveBusy: false,
+    uid: 0,
+    drag: null,
+    hintZone: null,
+    toastTimer: 0,
+    photoSession: 0,
+    photoTimer: 0,
+    photoDataUrl: null,
+    hairTrayWasFocused: false,
+    lookCompleted: false,
+    celebrationTimer: 0,
+  };
+
+  let deferredInstallPrompt = null;
+
+  const els = {
+    game: $('#game'),
+    stage: $('#dollStage'),
+    dollSvg: $('#dollSvg'),
+    clothingLayer: $('#clothingLayer'),
+    zoneHint: $('#zoneHint'),
+    baseBandeau: $('#baseBandeau'),
+    baseBriefs: $('#baseBriefs'),
+    rail: $('#rail'),
+    btnRailPrev: $('#btnRailPrev'),
+    btnRailNext: $('#btnRailNext'),
+    railProgress: $('#railProgress'),
+    railProgressThumb: $('#railProgressThumb'),
+    lookPill: $('.look-pill'),
+    lookCount: $('#lookCount'),
+    lookWord: $('#lookWord'),
+    closetCount: $('#closetCount'),
+    stageHint: $('#stageHint'),
+    toastHost: $('#toastHost'),
+    btnReset: $('#btnReset'),
+    btnUndo: $('#btnUndo'),
+    btnRemove: $('#btnRemove'),
+    btnRandom: $('#btnRandom'),
+    btnRestore: $('#btnRestore'),
+    btnSave: $('#btnSave'),
+    btnNew: $('#btnNew'),
+    btnInstall: $('#btnInstall'),
+    cats: $$('.cat'),
+    btnHair: $('#btnHair'),
+    hairDot: $('#hairDot'),
+    hairTray: $('#hairTray'),
+    hairSwatches: $('#hairSwatches'),
+    hairColorStatus: $('#hairColorStatus'),
+    btnHairClose: $('#btnHairClose'),
+    btnSound: $('#btnSound'),
+    soundIconUse: $('#btnSound use'),
+    btnPhoto: $('#btnPhoto'),
+    confettiLayer: $('#confettiLayer'),
+    photoOverlay: $('#photoOverlay'),
+    photoPreview: $('#photoPreview'),
+    photoResult: $('#photoResult'),
+    photoCount: $('#photoCount'),
+    photoFlash: $('#photoFlash'),
+    photoCaption: $('#photoCaption'),
+    photoTitle: $('#photoTitle'),
+    btnPhotoClose: $('#btnPhotoClose'),
+    btnPhotoCancel: $('#btnPhotoCancel'),
+    btnPhotoDownload: $('#btnPhotoDownload'),
+  };
+
+  const prefersReducedMotion = () =>
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const audio = {
+    ctx: null,
+    master: null,
+  };
+
+  function getAudioContext() {
+    if (!state.soundOn) return null;
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    try {
+      if (!audio.ctx) {
+        audio.ctx = new AudioContextClass();
+        audio.master = audio.ctx.createGain();
+        audio.master.gain.value = 0.72;
+        audio.master.connect(audio.ctx.destination);
+      }
+      if (audio.ctx.state === 'suspended') {
+        audio.ctx.resume().catch(() => {});
+      }
+      return audio.ctx;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function tone(freq, options = {}) {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    try {
+      const {
+        duration = 0.08,
+        delay = 0,
+        type = 'sine',
+        volume = 0.05,
+        endFreq = null,
+      } = options;
+      const start = ctx.currentTime + delay;
+      const oscillator = ctx.createOscillator();
+      const gain = ctx.createGain();
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(freq, start);
+      if (endFreq) {
+        oscillator.frequency.exponentialRampToValueAtTime(Math.max(40, endFreq), start + duration);
+      }
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(Math.max(0.0002, volume), start + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+      oscillator.connect(gain);
+      gain.connect(audio.master);
+      oscillator.start(start);
+      oscillator.stop(start + duration + 0.03);
+    } catch (_) { /* audio must never interrupt the game */ }
+  }
+
+  function noiseBurst(duration = 0.07, volume = 0.045, highpass = 1200) {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    try {
+      const length = Math.max(1, Math.floor(ctx.sampleRate * duration));
+      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i += 1) {
+        data[i] = (Math.random() * 2 - 1) * (1 - i / length);
+      }
+      const source = ctx.createBufferSource();
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+      source.buffer = buffer;
+      filter.type = 'highpass';
+      filter.frequency.value = highpass;
+      gain.gain.value = volume;
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(audio.master);
+      source.start();
+    } catch (_) { /* audio must never interrupt the game */ }
+  }
+
+  const playTap = () => tone(520, { duration: 0.045, type: 'triangle', volume: 0.025 });
+  const playEquip = () => {
+    tone(660, { duration: 0.09, type: 'sine', volume: 0.04 });
+    tone(880, { duration: 0.12, delay: 0.07, type: 'sine', volume: 0.035 });
+  };
+  const playDrop = () => {
+    tone(587, { duration: 0.08, type: 'sine', volume: 0.035 });
+    tone(784, { duration: 0.1, delay: 0.07, type: 'sine', volume: 0.035 });
+    tone(1046, { duration: 0.16, delay: 0.15, type: 'sine', volume: 0.028 });
+  };
+  const playError = () => {
+    tone(330, { duration: 0.12, type: 'triangle', volume: 0.04, endFreq: 196 });
+  };
+  const playUndo = () => {
+    tone(660, { duration: 0.08, type: 'triangle', volume: 0.03, endFreq: 440 });
+  };
+  const playWhoosh = () => {
+    tone(420, { duration: 0.2, type: 'sine', volume: 0.025, endFreq: 180 });
+  };
+  const playSparkle = () => {
+    [880, 1046, 1318, 1568].forEach((freq, i) => {
+      tone(freq, { duration: 0.1, delay: i * 0.055, type: 'sine', volume: 0.025 });
+    });
+  };
+  const playHair = () => {
+    tone(523, { duration: 0.09, type: 'sine', volume: 0.032 });
+    tone(784, { duration: 0.14, delay: 0.075, type: 'sine', volume: 0.026 });
+  };
+  const playTick = (step = 0) => {
+    tone(step <= 1 ? 720 : 620, { duration: 0.06, type: 'triangle', volume: 0.03 });
+  };
+  const playShutter = () => {
+    noiseBurst(0.055, 0.07, 1600);
+    tone(240, { duration: 0.06, type: 'square', volume: 0.018, endFreq: 140 });
+    setTimeout(() => noiseBurst(0.035, 0.04, 2200), 75);
+  };
+  const playPhotoReady = () => {
+    tone(659, { duration: 0.1, type: 'sine', volume: 0.03 });
+    tone(880, { duration: 0.12, delay: 0.08, type: 'sine', volume: 0.03 });
+    tone(1174, { duration: 0.18, delay: 0.16, type: 'sine', volume: 0.025 });
+  };
+  const playCongratulations = () => {
+    tone(523.25, { duration: 0.14, type: 'triangle', volume: 0.034 });
+    tone(659.25, { duration: 0.14, delay: 0.11, type: 'triangle', volume: 0.034 });
+    tone(783.99, { duration: 0.14, delay: 0.22, type: 'triangle', volume: 0.034 });
+    tone(1046.5, { duration: 0.22, delay: 0.33, type: 'triangle', volume: 0.032 });
+    [523.25, 659.25, 783.99, 1046.5].forEach((frequency) => {
+      tone(frequency, { duration: 0.62, delay: 0.55, type: 'sine', volume: 0.017 });
+    });
+    tone(261.63, { duration: 0.7, delay: 0.55, type: 'triangle', volume: 0.018 });
+    tone(1318.5, { duration: 0.32, delay: 0.74, type: 'sine', volume: 0.016 });
+    tone(1567.98, { duration: 0.38, delay: 0.9, type: 'sine', volume: 0.013 });
+  };
+  const playReset = () => {
+    tone(392, { duration: 0.08, type: 'sine', volume: 0.025 });
+    tone(523, { duration: 0.12, delay: 0.07, type: 'sine', volume: 0.025 });
+  };
+
+  function setSoundEnabled(enabled, announce = true) {
+    state.soundOn = Boolean(enabled);
+    els.btnSound.setAttribute('aria-pressed', String(state.soundOn));
+    els.btnSound.setAttribute('aria-label', state.soundOn ? 'Desativar sons' : 'Ativar sons');
+    els.btnSound.classList.toggle('is-off', !state.soundOn);
+    els.soundIconUse.setAttribute('href', state.soundOn ? '#i-volume' : '#i-volume-off');
+    if (state.soundOn && announce) {
+      tone(660, { duration: 0.08, type: 'sine', volume: 0.03 });
+      tone(880, { duration: 0.12, delay: 0.07, type: 'sine', volume: 0.025 });
+    }
+  }
+
+  function hairColorById(id) {
+    return HAIR_COLORS.find((color) => color.id === id) || HAIR_COLORS[0];
+  }
+
+  function applyHairColor(colorId, options = {}) {
+    const color = hairColorById(colorId);
+    state.hairColor = color.id;
+    const baseStops = $$('#hairBase stop', els.dollSvg);
+    const shineStops = $$('#hairShine stop', els.dollSvg);
+    const lockStops = $$('#hairLock stop', els.dollSvg);
+    baseStops.forEach((stop, index) => {
+      if (color.base[index]) stop.setAttribute('stop-color', color.base[index]);
+    });
+    shineStops.forEach((stop, index) => {
+      if (color.shine[index]) stop.setAttribute('stop-color', color.shine[index]);
+    });
+    lockStops.forEach((stop, index) => {
+      if (color.lock[index]) stop.setAttribute('stop-color', color.lock[index]);
+    });
+    els.hairDot.style.background = `linear-gradient(140deg, ${color.base[0]}, ${color.base[2]})`;
+    els.hairColorStatus.textContent = color.name;
+    $$('.hair-swatch', els.hairSwatches).forEach((button) => {
+      const selected = button.dataset.hair === color.id;
+      button.classList.toggle('is-selected', selected);
+      button.setAttribute('aria-pressed', String(selected));
+    });
+    if (options.announce) {
+      playHair();
+    }
+  }
+
+  function buildHairSwatches() {
+    els.hairSwatches.innerHTML = HAIR_COLORS.map((color) => `
+      <button
+        class="hair-swatch"
+        type="button"
+        data-hair="${color.id}"
+        aria-label="Cabelo ${color.name}"
+        aria-pressed="false"
+        title="${color.name}"
+        style="--hair-a:${color.base[0]};--hair-b:${color.base[2]}"
+      >
+        <svg class="ic hair-check" aria-hidden="true"><use href="#i-check"></use></svg>
+      </button>
+    `).join('');
+    applyHairColor(state.hairColor);
+  }
+
+  function setHairTray(open, options = {}) {
+    const { focus = true } = options;
+    const shouldOpen = Boolean(open);
+    if (shouldOpen && !els.photoOverlay.hidden) return;
+    els.hairTray.hidden = !shouldOpen;
+    els.btnHair.setAttribute('aria-expanded', String(shouldOpen));
+    els.stage.classList.toggle('is-hair-open', shouldOpen);
+    if (shouldOpen) {
+      state.hairTrayWasFocused = true;
+      const selected = $('.hair-swatch.is-selected', els.hairSwatches);
+      const first = $('.hair-swatch', els.hairSwatches);
+      (selected || first)?.focus({ preventScroll: true });
+      playTap();
+    } else if (focus && state.hairTrayWasFocused) {
+      els.btnHair.focus({ preventScroll: true });
+    }
+  }
+
+  function toggleHairTray() {
+    setHairTray(els.hairTray.hidden);
+  }
+
+  function getItemBBox(item) {
+    const p = item.pos || { x: 50, y: 170, w: 100, h: 180 };
+    return `${p.x} ${p.y} ${p.w} ${p.h}`;
+  }
+
+  function scopedSvg(item) {
+    const suffix = `-${item.id}-${++state.uid}`;
+    return item.svg
+      .replace(/\bid="([^"]+)"/g, (_, id) => `id="${id}${suffix}"`)
+      .replace(/url\(#([^)]+)\)/g, (_, id) => `url(#${id}${suffix})`);
+  }
+
+  function previewSvg(item) {
+    return `<svg viewBox="${getItemBBox(item)}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">${scopedSvg(item)}</svg>`;
+  }
+
+  function equippedIds() {
+    return new Set(Object.values(state.equipped));
+  }
+
+  function currentItemForZone(zone) {
+    const id = state.equipped[zone];
+    return id ? byId.get(id) : null;
+  }
+
+  function syncCardStates() {
+    const active = equippedIds();
+    $$('.item-card', els.rail).forEach((card) => {
+      const selected = active.has(card.dataset.id);
+      card.classList.toggle('is-equipped', selected);
+      card.setAttribute('aria-pressed', String(selected));
+    });
+  }
+
+  function updateLookCount() {
+    els.lookCount.textContent = String(state.lookCount);
+    els.lookWord.textContent = state.lookCount === 1 ? 'look' : 'looks';
+  }
+
+  function updateClosetCount() {
+    const count = state.filter === 'all' ? ITEMS.length : byCategory[state.filter].length;
+    els.closetCount.textContent = `${count} ${count === 1 ? 'peça para combinar' : 'peças para combinar'}`;
+  }
+
+  function updateControls() {
+    els.btnUndo.disabled = state.history.length === 0;
+    const hasSavedLook = state.lastLook && Object.keys(state.lastLook).length > 0;
+    els.btnRestore.disabled = !(hasSavedLook || state.lastHair);
+    updateLookCount();
+  }
+
+  function updateStageHint() {
+    const hasClothes = Object.keys(state.equipped).length > 0;
+    els.stageHint.classList.toggle('is-hidden', hasClothes);
+  }
+
+  function isLookComplete() {
+    const hasOutfit = Boolean(state.equipped.dress) || Boolean(state.equipped.top && state.equipped.bottom);
+    return hasOutfit && Boolean(state.equipped.feet);
+  }
+
+  function launchConfetti() {
+    if (prefersReducedMotion() || !els.confettiLayer) return;
+    const colors = ['#e3558c', '#f6c453', '#a780e0', '#ffffff', '#f49bbd', '#83b7de'];
+    const stageHeight = els.stage.clientHeight || 320;
+    els.confettiLayer.innerHTML = '';
+    const count = 24;
+    for (let i = 0; i < count; i += 1) {
+      const piece = document.createElement('span');
+      const width = 4 + Math.random() * 5;
+      const height = 5 + Math.random() * 8;
+      piece.className = 'confetti-piece';
+      piece.style.left = `${4 + Math.random() * 92}%`;
+      piece.style.width = `${width}px`;
+      piece.style.height = `${height}px`;
+      piece.style.background = colors[i % colors.length];
+      piece.style.borderRadius = Math.random() < 0.4 ? '50%' : '2px';
+      els.confettiLayer.appendChild(piece);
+      const drift = (Math.random() - 0.5) * 130;
+      const rotation = (Math.random() - 0.5) * 900;
+      try {
+        const animation = piece.animate(
+          [
+            { transform: 'translate3d(0, -16px, 0) rotate(0deg)', opacity: 0, offset: 0 },
+            { opacity: 1, offset: 0.1 },
+            { opacity: 1, offset: 0.76 },
+            { transform: `translate3d(${drift}px, ${stageHeight + 32}px, 0) rotate(${rotation}deg)`, opacity: 0, offset: 1 },
+          ],
+          {
+            duration: 1500 + Math.random() * 900,
+            delay: Math.random() * 360,
+            easing: 'cubic-bezier(0.22, 0.6, 0.35, 1)',
+            fill: 'both',
+          }
+        );
+        animation.finished.then(() => piece.remove()).catch(() => piece.remove());
+      } catch (_) {
+        piece.remove();
+      }
+    }
+  }
+
+  function celebrateLook() {
+    state.celebrationTimer = 0;
+    if (!isLookComplete() || !els.photoOverlay.hidden) {
+      state.lookCompleted = false;
+      return;
+    }
+    playCongratulations();
+    showToast('Parabéns! Seu look está pronto!', 'gold', 'i-star', 3000);
+    launchConfetti();
+  }
+
+  function checkLookCompletion(delay = 520) {
+    if (!isLookComplete()) {
+      state.lookCompleted = false;
+      window.clearTimeout(state.celebrationTimer);
+      state.celebrationTimer = 0;
+      return;
+    }
+    if (state.lookCompleted) return;
+    state.lookCompleted = true;
+    window.clearTimeout(state.celebrationTimer);
+    state.celebrationTimer = window.setTimeout(celebrateLook, delay);
+  }
+
+  function updateRailNav() {
+    const rail = els.rail;
+    if (!rail) return;
+    const maxScroll = Math.max(0, rail.scrollWidth - rail.clientWidth);
+    const hasOverflow = maxScroll > 2;
+    els.btnRailPrev.disabled = !hasOverflow || rail.scrollLeft <= 2;
+    els.btnRailNext.disabled = !hasOverflow || rail.scrollLeft >= maxScroll - 2;
+    els.railProgress.classList.toggle('is-hidden', !hasOverflow);
+    if (!hasOverflow) return;
+    const visibleRatio = Math.min(1, rail.clientWidth / rail.scrollWidth);
+    const thumbWidth = Math.min(100, Math.max(visibleRatio * 100, 16));
+    const progress = maxScroll > 0 ? rail.scrollLeft / maxScroll : 0;
+    els.railProgressThumb.style.width = `${thumbWidth}%`;
+    els.railProgressThumb.style.left = `${progress * (100 - thumbWidth)}%`;
+  }
+
+  function scrollRailBy(direction) {
+    const maxScroll = Math.max(0, els.rail.scrollWidth - els.rail.clientWidth);
+    if (maxScroll <= 2) return;
+    const amount = Math.max(150, els.rail.clientWidth * 0.78);
+    els.rail.scrollBy({
+      left: direction * amount,
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    });
+    playTap();
+  }
+
+  function renderDoll(animateZones = null) {
+    const animate = animateZones ? new Set(animateZones) : new Set();
+    els.clothingLayer.innerHTML = '';
+
+    if (els.baseBandeau) {
+      els.baseBandeau.style.display = state.equipped.top || state.equipped.dress ? 'none' : '';
+    }
+    if (els.baseBriefs) {
+      els.baseBriefs.style.display = state.equipped.bottom || state.equipped.dress ? 'none' : '';
+    }
+
+    ZONE_ORDER.forEach((zone) => {
+      const item = currentItemForZone(zone);
+      if (!item) return;
+      const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      group.setAttribute('class', 'equipped-piece' + (animate.has(zone) ? ' is-new' : ''));
+      group.dataset.zone = zone;
+      group.dataset.item = item.id;
+      group.innerHTML = scopedSvg(item);
+      els.clothingLayer.appendChild(group);
+    });
+
+    syncCardStates();
+    updateStageHint();
+    updateClosetCount();
+    els.lookPill.classList.toggle('is-complete', isLookComplete());
+  }
+
+  function renderRail() {
+    const items = state.filter === 'all' ? ITEMS : byCategory[state.filter];
+    if (!items.length) {
+      els.rail.innerHTML = '<div class="rail-empty">Nenhuma peça nesta categoria.</div>';
+      updateClosetCount();
+      requestAnimationFrame(updateRailNav);
+      return;
+    }
+
+    els.rail.innerHTML = items.map((item) => {
+      const active = equippedIds().has(item.id);
+      const label = `Vestir ${item.name}. Toque para vestir ou arraste até a área certa da boneca.`;
+      return `
+        <button class="item-card" type="button" data-id="${item.id}" aria-label="${label}" aria-pressed="${active}" title="${item.name}">
+          <span class="equipped-badge" aria-hidden="true"><svg class="ic"><use href="#i-check"></use></svg></span>
+          <span class="item-preview" aria-hidden="true">${previewSvg(item)}</span>
+          <span class="item-name">${item.name}</span>
+        </button>
+      `;
+    }).join('');
+
+    syncCardStates();
+    updateClosetCount();
+    requestAnimationFrame(updateRailNav);
+  }
+
+  function setFilter(filter, announce = true) {
+    if (!['all', 'clothes', 'shoes', 'accessories'].includes(filter)) return;
+    state.filter = filter;
+    els.cats.forEach((button) => {
+      const active = button.dataset.filter === filter;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    els.rail.scrollLeft = 0;
+    renderRail();
+    if (announce) {
+      const labels = {
+        all: 'Mostrando todas as peças.',
+        clothes: 'Mostrando roupas.',
+        shoes: 'Mostrando sapatos.',
+        accessories: 'Mostrando acessórios.',
+      };
+      showToast(labels[filter], 'lilac', 'i-grid', 1200);
+    }
+  }
+
+  function showToast(message, tone = 'rose', icon = 'i-heart', duration = 1900) {
+    window.clearTimeout(state.toastTimer);
+    const toneClass = tone === 'rose' ? '' : ` is-${tone}`;
+    els.toastHost.innerHTML = `
+      <div class="toast${toneClass}">
+        <span class="toast-icon"><svg class="ic" aria-hidden="true"><use href="#${icon}"></use></svg></span>
+        <span>${message}</span>
+      </div>
+    `;
+    const toast = $('.toast', els.toastHost);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => toast.classList.add('is-showing'));
+    });
+    state.toastTimer = window.setTimeout(() => {
+      toast.classList.remove('is-showing');
+      window.setTimeout(() => {
+        if (toast.parentNode) toast.remove();
+      }, 250);
+    }, duration);
+  }
+
+  function pushHistory() {
+    state.history.push({
+      equipped: { ...state.equipped },
+      lookCount: state.lookCount,
+      hairColor: state.hairColor,
+    });
+    if (state.history.length > 25) state.history.shift();
+    updateControls();
+  }
+
+  function equipItem(item, source = 'tap') {
+    if (!item) return;
+
+    if (state.equipped[item.zone] === item.id) {
+      showToast('Essa peça já está no look.', 'lilac', 'i-check', 1500);
+      return;
+    }
+
+    pushHistory();
+
+    if (item.zone === 'dress') {
+      delete state.equipped.top;
+      delete state.equipped.bottom;
+    } else if (item.zone === 'top' || item.zone === 'bottom') {
+      delete state.equipped.dress;
+    }
+
+    state.equipped[item.zone] = item.id;
+    state.lookCount += 1;
+
+    renderDoll([item.zone]);
+    updateControls();
+
+    const messagesByZone = {
+      dress: ['Que look lindo!', 'Vestido perfeito!', 'Arrasei!'],
+      top: ['Combinação linda!', 'Blusa escolhida com estilo!', 'Ficou perfeita!'],
+      bottom: ['Look em construção!', 'Essa peça ficou incrível!', 'Que charme!'],
+      feet: ['Sapato escolhido!', 'Um passo mais fashion!', 'Pisada de passarela!'],
+      neck: ['Toque de elegância!', 'Brilho no pescoço!', 'Look refinado!'],
+      earrings: ['Brilho nas orelhas!', 'Detalhe delicado!', 'Brinco combinando!'],
+      head: ['Acessório poderoso!', 'Detalhe que brilha!', 'Cabeça de passarela!'],
+      hand: ['Bolsa combinando!', 'Look completo!', 'Estilo na mão!'],
+    };
+    const messages = messagesByZone[item.zone] || ['Que look lindo!'];
+    const message = source === 'drop'
+      ? 'Encaixou perfeitamente!'
+      : messages[Math.floor(Math.random() * messages.length)];
+    if (source === 'drop') playDrop(); else playEquip();
+    showToast(message, source === 'drop' ? 'gold' : 'rose', source === 'drop' ? 'i-star' : 'i-heart');
+    checkLookCompletion(620);
+  }
+
+  function undo() {
+    if (!state.history.length) {
+      showToast('Nada para desfazer ainda.', 'lilac', 'i-undo', 1500);
+      return;
+    }
+    const snapshot = state.history.pop();
+    state.equipped = { ...snapshot.equipped };
+    state.lookCount = snapshot.lookCount;
+    if (snapshot.hairColor) applyHairColor(snapshot.hairColor);
+    hideZoneHint(true);
+    renderDoll();
+    updateControls();
+    playUndo();
+    showToast('Desfeito!', 'lilac', 'i-undo', 1500);
+    checkLookCompletion(360);
+  }
+
+  function removeAll() {
+    if (!Object.keys(state.equipped).length) {
+      showToast('A boneca já está sem roupas.', 'lilac', 'i-shirt', 1500);
+      return;
+    }
+    pushHistory();
+    state.lastLook = { ...state.equipped };
+    state.lastHair = state.hairColor;
+    state.equipped = {};
+    state.lookCount += 1;
+    hideZoneHint(true);
+    renderDoll();
+    updateControls();
+    playWhoosh();
+    showToast('Todas as peças foram removidas.', 'rose', 'i-shirt');
+    checkLookCompletion(0);
+  }
+
+  function randomLook() {
+    const pick = (items) => items[Math.floor(Math.random() * items.length)];
+    const shuffle = (items) => {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    };
+
+    pushHistory();
+    state.lastLook = { ...state.equipped };
+    state.lastHair = state.hairColor;
+
+    const next = {};
+    if (Math.random() < 0.58) {
+      next.dress = pick(byZone.dress).id;
+    } else {
+      next.top = pick(byZone.top).id;
+      next.bottom = pick(byZone.bottom).id;
+    }
+    next.feet = pick(byZone.feet).id;
+
+    const accessoryZones = shuffle(['neck', 'head', 'earrings', 'hand']);
+    const accessoryCount = Math.floor(Math.random() * 4);
+    for (let i = 0; i < accessoryCount; i += 1) {
+      const zone = accessoryZones[i];
+      next[zone] = pick(byZone[zone]).id;
+    }
+
+    const newHair = pick(HAIR_COLORS).id;
+    applyHairColor(newHair);
+
+    state.equipped = next;
+    state.lookCount += 1;
+    hideZoneHint(true);
+    renderDoll(Object.keys(next));
+    updateControls();
+    playSparkle();
+    showToast('Look aleatório arrasou!', 'gold', 'i-sparkles', 1900);
+    checkLookCompletion(650);
+  }
+
+  function newLook() {
+    pushHistory();
+    state.lastLook = { ...state.equipped };
+    state.lastHair = state.hairColor;
+    state.equipped = {};
+    state.lookCount += 1;
+    hideZoneHint(true);
+    renderDoll();
+    updateControls();
+    playTap();
+    showToast('Novo look pronto para criar!', 'lilac', 'i-sparkles', 1700);
+    checkLookCompletion(0);
+  }
+
+  function restoreLook() {
+    const hasSavedLook = state.lastLook && Object.keys(state.lastLook).length > 0;
+    if (!hasSavedLook && !state.lastHair) {
+      showToast('Nenhum look guardado ainda.', 'error', 'i-restore', 1600);
+      return;
+    }
+    pushHistory();
+    state.equipped = { ...(state.lastLook || {}) };
+    if (state.lastHair) applyHairColor(state.lastHair);
+    state.lookCount += 1;
+    hideZoneHint(true);
+    renderDoll(Object.keys(state.equipped));
+    updateControls();
+    playSparkle();
+    showToast('Look restaurado!', 'lilac', 'i-restore', 1700);
+    checkLookCompletion(520);
+  }
+
+  function resetGame() {
+    cancelPointerDrag(true);
+    if (els.confettiLayer) els.confettiLayer.innerHTML = '';
+    setHairTray(false, { focus: false });
+    state.equipped = {};
+    state.lookCount = 0;
+    state.history = [];
+    state.lastLook = null;
+    state.lastHair = null;
+    hideZoneHint(true);
+    applyHairColor(DEFAULT_HAIR);
+    setFilter('all', false);
+    renderDoll();
+    updateControls();
+    playReset();
+    window.clearTimeout(state.celebrationTimer);
+    state.celebrationTimer = 0;
+    state.lookCompleted = false;
+    showToast('Jogo reiniciado. Vamos criar!', 'rose', 'i-reset', 1700);
+  }
+
+  function svgPointFromEvent(clientX, clientY) {
+    const svg = els.dollSvg;
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const ctm = svg.getScreenCTM();
+    if (!ctm) return { x: -1, y: -1 };
+    const svgP = pt.matrixTransform(ctm.inverse());
+    return { x: svgP.x, y: svgP.y };
+  }
+
+  function pointInZone(point, zoneName, tolerance = 6) {
+    const zone = ZONES[zoneName];
+    if (!zone) return false;
+    return (
+      point.x >= zone.x - tolerance &&
+      point.x <= zone.x + zone.w + tolerance &&
+      point.y >= zone.y - tolerance &&
+      point.y <= zone.y + zone.h + tolerance
+    );
+  }
+
+  function renderZoneHint(zoneName, stateClass = '') {
+    const zone = ZONES[zoneName];
+    if (!zone) return;
+    if (state.hintZone !== zoneName || !$('.zone-shape', els.zoneHint)) {
+      state.hintZone = zoneName;
+      els.zoneHint.innerHTML = `<rect class="zone-shape" x="${zone.x}" y="${zone.y}" width="${zone.w}" height="${zone.h}" rx="14"/>`;
+    }
+    const shape = $('.zone-shape', els.zoneHint);
+    if (!shape) return;
+    shape.classList.toggle('is-valid', stateClass === 'valid');
+    shape.classList.toggle('is-error', stateClass === 'error');
+  }
+
+  function hideZoneHint(immediate = false) {
+    const clear = () => {
+      els.zoneHint.innerHTML = '';
+      state.hintZone = null;
+    };
+    if (immediate) {
+      clear();
+      return;
+    }
+    window.setTimeout(() => {
+      if (!state.drag) clear();
+    }, 150);
+  }
+
+  function makeGhost(item, clientX, clientY) {
+    const ghost = document.createElement('div');
+    const widths = { dress: 90, top: 74, bottom: 78, feet: 62, neck: 46, head: 72, hand: 58 };
+    ghost.className = 'drag-ghost';
+    ghost.style.width = `${widths[item.zone] || 78}px`;
+    ghost.style.left = `${clientX}px`;
+    ghost.style.top = `${clientY}px`;
+    ghost.innerHTML = `<svg viewBox="${getItemBBox(item)}" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">${scopedSvg(item)}</svg>`;
+    document.body.appendChild(ghost);
+    return ghost;
+  }
+
+  function startDrag(event) {
+    const drag = state.drag;
+    if (!drag || drag.dragging) return;
+    drag.dragging = true;
+    drag.ghost.classList.add('is-visible');
+    drag.card.classList.add('is-dragging');
+    document.body.classList.add('is-dragging');
+    els.toastHost.innerHTML = '';
+    try { drag.card.setPointerCapture(event.pointerId); } catch (_) { /* capture is optional */ }
+    drag.ghost.style.left = `${event.clientX}px`;
+    drag.ghost.style.top = `${event.clientY}px`;
+    updateDragHover(event.clientX, event.clientY);
+    playTap();
+    if (navigator.vibrate) {
+      try { navigator.vibrate(8); } catch (_) { /* optional feedback */ }
+    }
+  }
+
+  function updateDragHover(clientX, clientY) {
+    const drag = state.drag;
+    if (!drag || !drag.dragging) return;
+    const point = svgPointFromEvent(clientX, clientY);
+    const valid = pointInZone(point, drag.item.zone);
+    drag.ghost.classList.toggle('is-over-target', valid);
+    renderZoneHint(drag.item.zone, valid ? 'valid' : '');
+  }
+
+  function cancelPointerDrag(removeGhost = false) {
+    const drag = state.drag;
+    if (drag) {
+      if (drag.card) drag.card.classList.remove('is-dragging');
+      if (removeGhost && drag.ghost) drag.ghost.remove();
+      state.drag = null;
+    }
+    document.body.classList.remove('is-dragging');
+    hideZoneHint(true);
+  }
+
+  function finishGhost(ghost, mode, card) {
+    if (!ghost) return;
+    if (prefersReducedMotion()) {
+      ghost.remove();
+      return;
+    }
+
+    if (mode === 'reject' && card) {
+      const cardRect = card.getBoundingClientRect();
+      const fromX = parseFloat(ghost.style.left) || cardRect.left;
+      const fromY = parseFloat(ghost.style.top) || cardRect.top;
+      const toX = cardRect.left + cardRect.width / 2;
+      const toY = cardRect.top + cardRect.height / 2;
+      const animation = ghost.animate(
+        [
+          { left: `${fromX}px`, top: `${fromY}px`, opacity: 1, transform: 'translate(-50%, -54%) rotate(-4deg) scale(0.96)' },
+          { left: `${fromX + (toX - fromX) * 0.22}px`, top: `${fromY + (toY - fromY) * 0.22}px`, opacity: 0.95, transform: 'translate(-50%, -54%) rotate(6deg) scale(0.88)', offset: 0.28 },
+          { left: `${toX}px`, top: `${toY}px`, opacity: 0, transform: 'translate(-50%, -50%) rotate(0deg) scale(0.3)' },
+        ],
+        { duration: 340, easing: 'cubic-bezier(0.33, 0.8, 0.3, 1)' }
+      );
+      animation.finished.then(() => ghost.remove()).catch(() => ghost.remove());
+      return;
+    }
+
+    const animation = ghost.animate(
+      [
+        { opacity: 1, transform: 'translate(-50%, -54%) rotate(-4deg) scale(0.96)' },
+        { opacity: 1, transform: 'translate(-50%, -56%) rotate(2deg) scale(1.1)', offset: 0.38 },
+        { opacity: 0, transform: 'translate(-50%, -58%) rotate(0deg) scale(0.62)' },
+      ],
+      { duration: 300, easing: 'cubic-bezier(0.2, 0.9, 0.3, 1)' }
+    );
+    animation.finished.then(() => ghost.remove()).catch(() => ghost.remove());
+  }
+
+  function onRailPointerDown(event) {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    const card = event.target.closest('.item-card');
+    if (!card || !els.rail.contains(card)) return;
+    const item = byId.get(card.dataset.id);
+    if (!item) return;
+
+    if (!els.hairTray.hidden) setHairTray(false, { focus: false });
+    if (state.drag) cancelPointerDrag(true);
+
+    const ghost = makeGhost(item, event.clientX, event.clientY);
+    state.drag = {
+      pointerId: event.pointerId,
+      pointerType: event.pointerType,
+      card,
+      item,
+      startX: event.clientX,
+      startY: event.clientY,
+      x: event.clientX,
+      y: event.clientY,
+      ghost,
+      dragging: false,
+      cancelled: false,
+    };
+
+    if (event.pointerType === 'mouse') {
+      try { card.setPointerCapture(event.pointerId); } catch (_) { /* ignore */ }
+    }
+  }
+
+  function onPointerMove(event) {
+    const drag = state.drag;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    drag.x = event.clientX;
+    drag.y = event.clientY;
+
+    if (!drag.dragging) {
+      const dx = event.clientX - drag.startX;
+      const dy = event.clientY - drag.startY;
+      const distance = Math.hypot(dx, dy);
+      if (distance < 6) return;
+
+      const horizontalIntent = Math.abs(dx) > Math.abs(dy) * 1.15;
+      if (drag.pointerType !== 'mouse' && horizontalIntent) {
+        drag.cancelled = true;
+        drag.ghost.remove();
+        state.drag = null;
+        document.body.classList.remove('is-dragging');
+        return;
+      }
+      startDrag(event);
+    }
+
+    if (event.cancelable) event.preventDefault();
+    drag.ghost.style.left = `${event.clientX}px`;
+    drag.ghost.style.top = `${event.clientY}px`;
+    updateDragHover(event.clientX, event.clientY);
+  }
+
+  function onPointerUp(event) {
+    const drag = state.drag;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    if (drag.dragging) {
+      if (event.cancelable) event.preventDefault();
+      const point = svgPointFromEvent(event.clientX, event.clientY);
+      const valid = pointInZone(point, drag.item.zone);
+      drag.ghost.classList.remove('is-over-target');
+      drag.card.classList.remove('is-dragging');
+      document.body.classList.remove('is-dragging');
+
+      if (valid) {
+        renderZoneHint(drag.item.zone, 'valid');
+        finishGhost(drag.ghost, 'success');
+        const item = drag.item;
+        state.drag = null;
+        equipItem(item, 'drop');
+        window.setTimeout(() => hideZoneHint(true), 190);
+      } else {
+        renderZoneHint(drag.item.zone, 'error');
+        finishGhost(drag.ghost, 'reject', drag.card);
+        const item = drag.item;
+        state.drag = null;
+        showToast('Arraste para a área certa!', 'error', 'i-grab', 2000);
+        playError();
+        els.stage.classList.remove('shake');
+        void els.stage.offsetWidth;
+        els.stage.classList.add('shake');
+        window.setTimeout(() => {
+          els.stage.classList.remove('shake');
+          hideZoneHint(true);
+        }, 900);
+      }
+      return;
+    }
+
+    const item = drag.item;
+    drag.ghost.remove();
+    state.drag = null;
+    document.body.classList.remove('is-dragging');
+    equipItem(item, 'tap');
+  }
+
+  function onPointerCancel(event) {
+    const drag = state.drag;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    cancelPointerDrag(true);
+  }
+
+  function loadImage(source) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error('Falha ao carregar o SVG exportado.'));
+      image.src = source;
+    });
+  }
+
+  function drawSpark(ctx, x, y, radius, color, opacity = 1) {
+    ctx.save();
+    ctx.globalAlpha = opacity;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x, y - radius);
+    ctx.bezierCurveTo(x + radius * 0.18, y - radius * 0.35, x + radius * 0.35, y - radius * 0.18, x + radius, y);
+    ctx.bezierCurveTo(x + radius * 0.35, y + radius * 0.18, x + radius * 0.18, y + radius * 0.35, x, y + radius);
+    ctx.bezierCurveTo(x - radius * 0.18, y + radius * 0.35, x - radius * 0.35, y + radius * 0.18, x - radius, y);
+    ctx.bezierCurveTo(x - radius * 0.35, y - radius * 0.18, x - radius * 0.18, y - radius * 0.35, x, y - radius);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function triggerDownload(dataUrl, filename) {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = filename;
+    link.rel = 'noopener';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  function createDollClone(options = {}) {
+    const { scopeIds = false } = options;
+    const clone = els.dollSvg.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('width', '200');
+    clone.setAttribute('height', '420');
+    const hint = clone.querySelector('#zoneHint');
+    if (hint) hint.innerHTML = '';
+    clone.querySelectorAll('.equipped-piece').forEach((node) => node.classList.remove('is-new'));
+    return scopeIds ? scopeSvgIds(clone) : clone;
+  }
+
+  function scopeSvgIds(root) {
+    const suffix = `-look-${Date.now()}-${Math.floor(Math.random() * 9999)}`;
+    const nodes = [root, ...root.querySelectorAll('*')];
+    const idMap = new Map();
+    nodes.forEach((node) => {
+      if (node.id) {
+        const replacement = `${node.id}${suffix}`;
+        idMap.set(node.id, replacement);
+        node.id = replacement;
+      }
+    });
+    const attrs = ['fill', 'stroke', 'filter', 'clip-path', 'mask', 'style'];
+    nodes.forEach((node) => {
+      attrs.forEach((attr) => {
+        const value = node.getAttribute(attr);
+        if (value && value.includes('url(#')) {
+          node.setAttribute(attr, value.replace(/url\(#([^)]+)\)/g, (match, id) => {
+            const replacement = idMap.get(id);
+            return replacement ? `url(#${replacement})` : match;
+          }));
+        }
+      });
+      ['href', 'xlink:href'].forEach((attr) => {
+        const value = node.getAttribute(attr);
+        if (value && value.startsWith('#')) {
+          const replacement = idMap.get(value.slice(1));
+          if (replacement) node.setAttribute(attr, `#${replacement}`);
+        }
+      });
+    });
+    root.removeAttribute('id');
+    return root;
+  }
+
+  async function getDollImage() {
+    if (typeof XMLSerializer === 'undefined') throw new Error('XMLSerializer indisponível.');
+    const clone = createDollClone();
+    const xml = new XMLSerializer().serializeToString(clone);
+    if (!xml || !xml.includes('<svg')) throw new Error('SVG vazio.');
+    const source = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(xml)}`;
+    return loadImage(source);
+  }
+
+  function roundedRect(ctx, x, y, width, height, radius) {
+    const r = Math.min(radius, width / 2, height / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width, y, x + width, y + height, r);
+    ctx.arcTo(x + width, y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + width, y, r);
+    ctx.closePath();
+  }
+
+  function createPhotoDataUrl(image) {
+    const width = 900;
+    const height = 1320;
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Canvas indisponível.');
+
+    const background = ctx.createLinearGradient(0, 0, width, height);
+    background.addColorStop(0, '#ffeef7');
+    background.addColorStop(0.55, '#f8d8e9');
+    background.addColorStop(1, '#e7cdec');
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(112, 127, 185, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#dfc7f0';
+    ctx.beginPath();
+    ctx.arc(815, 1140, 230, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    drawSpark(ctx, 75, 125, 20, '#ffffff', 0.75);
+    drawSpark(ctx, 840, 250, 14, '#f1c86b', 0.85);
+    drawSpark(ctx, 72, 1130, 11, '#f5bfd8', 0.8);
+    drawSpark(ctx, 812, 1000, 17, '#ffffff', 0.7);
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(79, 28, 55, 0.22)';
+    ctx.shadowBlur = 48;
+    ctx.shadowOffsetY = 18;
+    ctx.fillStyle = '#fffdfd';
+    roundedRect(ctx, 34, 30, 832, 1260, 30);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.fillStyle = '#fffdfd';
+    roundedRect(ctx, 34, 30, 832, 1260, 30);
+    ctx.fill();
+
+    const photoX = 72;
+    const photoY = 68;
+    const photoW = 756;
+    const photoH = 1002;
+
+    ctx.save();
+    roundedRect(ctx, photoX, photoY, photoW, photoH, 10);
+    ctx.clip();
+    const photoBackground = ctx.createLinearGradient(0, photoY, 0, photoY + photoH);
+    photoBackground.addColorStop(0, '#fff7fb');
+    photoBackground.addColorStop(0.52, '#fbe3f0');
+    photoBackground.addColorStop(1, '#ecd7f1');
+    ctx.fillStyle = photoBackground;
+    ctx.fillRect(photoX, photoY, photoW, photoH);
+
+    const halo = ctx.createRadialGradient(
+      photoX + photoW / 2,
+      photoY + 390,
+      50,
+      photoX + photoW / 2,
+      photoY + 390,
+      390
+    );
+    halo.addColorStop(0, 'rgba(255,255,255,0.98)');
+    halo.addColorStop(0.64, 'rgba(255,255,255,0.4)');
+    halo.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = halo;
+    ctx.fillRect(photoX, photoY, photoW, photoH);
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.84)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(photoX + photoW / 2, photoY + 460, 260, 430, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    const dollHeight = 928;
+    const dollWidth = (dollHeight / 420) * 200;
+    const dollX = photoX + (photoW - dollWidth) / 2;
+    const dollY = photoY + 42;
+    ctx.drawImage(image, dollX, dollY, dollWidth, dollHeight);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.72)';
+    ctx.beginPath();
+    ctx.ellipse(photoX + photoW / 2, photoY + 978, 200, 22, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    drawSpark(ctx, 112, 180, 12, '#ffffff', 0.9);
+    drawSpark(ctx, 795, 860, 10, '#f4cf78', 0.75);
+
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#6c2d56';
+    ctx.font = 'italic 600 45px Georgia, "Times New Roman", serif';
+    ctx.fillText('Meu Look Fashion', width / 2, 1153);
+
+    ctx.fillStyle = 'rgba(108,45,86,0.58)';
+    ctx.font = '700 14px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('FOTO DO ATELIÊ', width / 2, 1184);
+
+    ctx.strokeStyle = 'rgba(180,103,141,0.32)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(325, 1211);
+    ctx.lineTo(575, 1211);
+    ctx.stroke();
+
+    drawSpark(ctx, 300, 1211, 6, '#d5a341', 0.8);
+    drawSpark(ctx, 600, 1211, 6, '#d5a341', 0.8);
+
+    ctx.fillStyle = 'rgba(108,45,86,0.44)';
+    ctx.font = '600 12px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('UM LOOK FEITO COM CARINHO', width / 2, 1248);
+    ctx.restore();
+
+    const dataUrl = canvas.toDataURL('image/png');
+    if (!dataUrl || !dataUrl.startsWith('data:image/png') || dataUrl.length < 100) {
+      throw new Error('A foto não pôde ser gerada.');
+    }
+    return dataUrl;
+  }
+
+  async function saveLook() {
+    if (state.saveBusy) return;
+    state.saveBusy = true;
+    els.btnSave.disabled = true;
+    els.btnSave.classList.add('is-busy');
+    const label = $('span', els.btnSave);
+    const previousLabel = label.textContent;
+    label.textContent = 'Preparando';
+    showToast('Preparando sua imagem...', 'lilac', 'i-image', 1100);
+
+    try {
+      const image = await getDollImage();
+
+      const width = 720;
+      const height = 1440;
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Canvas indisponível.');
+
+      const background = ctx.createLinearGradient(0, 0, 0, height);
+      background.addColorStop(0, '#fff7fb');
+      background.addColorStop(0.45, '#fde7f1');
+      background.addColorStop(1, '#efcfe5');
+      ctx.fillStyle = background;
+      ctx.fillRect(0, 0, width, height);
+
+      const halo = ctx.createRadialGradient(width / 2, 610, 40, width / 2, 610, 420);
+      halo.addColorStop(0, 'rgba(255,255,255,0.92)');
+      halo.addColorStop(0.68, 'rgba(255,255,255,0.32)');
+      halo.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = halo;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,255,255,0.82)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.ellipse(width / 2, 610, 250, 505, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      drawSpark(ctx, 93, 155, 19, '#ffffff', 0.88);
+      drawSpark(ctx, 626, 227, 13, '#f4ce7c', 0.9);
+      drawSpark(ctx, 108, 1090, 10, '#f7c1d9', 0.85);
+      drawSpark(ctx, 618, 1002, 16, '#ffffff', 0.82);
+      drawSpark(ctx, 653, 430, 8, '#ffffff', 0.7);
+      drawSpark(ctx, 67, 600, 7, '#eac073', 0.65);
+
+      ctx.save();
+      ctx.fillStyle = 'rgba(255,255,255,0.72)';
+      ctx.beginPath();
+      ctx.ellipse(width / 2, 1302, 178, 22, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.drawImage(image, 60, 58, 600, 1260);
+
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#6c2d56';
+      ctx.font = 'italic 600 37px Georgia, "Times New Roman", serif';
+      ctx.fillText('Meu Look Fashion', width / 2, 1373);
+      ctx.fillStyle = 'rgba(108,45,86,0.55)';
+      ctx.font = '700 13px "Segoe UI", Arial, sans-serif';
+      ctx.fillText('UM LOOK FEITO COM CARINHO', width / 2, 1402);
+      ctx.restore();
+
+      const dataUrl = canvas.toDataURL('image/png');
+      if (!dataUrl || !dataUrl.startsWith('data:image/png') || dataUrl.length < 100) {
+        throw new Error('A imagem não pôde ser gerada.');
+      }
+
+      triggerDownload(dataUrl, `meu-look-fashion-${Date.now()}.png`);
+      playPhotoReady();
+      showToast('Look salvo! A imagem foi baixada.', 'gold', 'i-image', 2100);
+    } catch (error) {
+      console.error('Erro ao salvar o look:', error);
+      playError();
+      showToast('Não foi possível salvar a imagem. Tente novamente.', 'error', 'i-alert', 2600);
+    } finally {
+      state.saveBusy = false;
+      els.btnSave.disabled = false;
+      els.btnSave.classList.remove('is-busy');
+      label.textContent = previousLabel;
+    }
+  }
+
+  function setGameInert(inert) {
+    ['.topbar', '.actionbar', '.stage-area', '.wardrobe'].forEach((selector) => {
+      const element = $(selector, els.game);
+      if (!element) return;
+      if (inert) {
+        element.setAttribute('inert', '');
+        element.setAttribute('aria-hidden', 'true');
+      } else {
+        element.removeAttribute('inert');
+        element.removeAttribute('aria-hidden');
+      }
+    });
+  }
+
+  function getFocusable(container) {
+    return $$('button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])', container)
+      .filter((element) => element.offsetParent !== null);
+  }
+
+  function trapFocusInModal(event) {
+    if (event.key !== 'Tab') return;
+    const container = $('.photo-modal', els.photoOverlay);
+    if (!container) return;
+    const focusable = getFocusable(container);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (!container.contains(document.activeElement)) {
+      event.preventDefault();
+      first.focus();
+      return;
+    }
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
+  function startPhotoCountdown(session) {
+    let count = 3;
+    const step = () => {
+      if (state.photoSession !== session) return;
+      if (count > 0) {
+        els.photoCount.textContent = String(count);
+        els.photoCount.classList.remove('is-pop');
+        void els.photoCount.offsetWidth;
+        els.photoCount.classList.add('is-pop');
+        playTick(count);
+        count -= 1;
+        state.photoTimer = window.setTimeout(step, 820);
+      } else {
+        els.photoCount.textContent = '';
+        takePhoto(session);
+      }
+    };
+    state.photoTimer = window.setTimeout(step, 420);
+  }
+
+  async function takePhoto(session) {
+    if (state.photoSession !== session) return;
+    els.photoFlash.classList.remove('is-flashing');
+    void els.photoFlash.offsetWidth;
+    els.photoFlash.classList.add('is-flashing');
+    playShutter();
+    els.photoCaption.textContent = 'Revelando sua foto...';
+
+    try {
+      const image = await getDollImage();
+      if (state.photoSession !== session) return;
+      const dataUrl = createPhotoDataUrl(image);
+      if (state.photoSession !== session) return;
+      state.photoDataUrl = dataUrl;
+      els.photoResult.src = dataUrl;
+      els.photoPreview.hidden = true;
+      els.photoResult.hidden = false;
+      els.photoOverlay.classList.add('is-ready');
+      els.photoTitle.textContent = 'Seu look em foco';
+      els.photoCaption.textContent = 'Sua foto ficou pronta!';
+      els.btnPhotoDownload.disabled = false;
+      playPhotoReady();
+      els.btnPhotoDownload.focus({ preventScroll: true });
+    } catch (error) {
+      console.error('Erro ao tirar a foto:', error);
+      if (state.photoSession !== session) return;
+      els.photoCount.textContent = '';
+      els.photoTitle.textContent = 'Ops!';
+      els.photoCaption.textContent = 'Não foi possível tirar a foto. Tente novamente.';
+      playError();
+    }
+  }
+
+  function openPhotoStudio() {
+    if (!els.photoOverlay.hidden) return;
+    setHairTray(false, { focus: false });
+    hideZoneHint(true);
+    window.clearTimeout(state.toastTimer);
+    window.clearTimeout(state.celebrationTimer);
+    state.celebrationTimer = 0;
+    els.toastHost.innerHTML = '';
+    state.photoSession += 1;
+    const session = state.photoSession;
+    state.photoDataUrl = null;
+
+    els.photoOverlay.hidden = false;
+    requestAnimationFrame(() => {
+      if (state.photoSession === session && !els.photoOverlay.hidden) {
+        els.photoOverlay.classList.add('is-open');
+        els.btnPhotoClose.focus({ preventScroll: true });
+      }
+    });
+    setGameInert(true);
+    els.photoTitle.textContent = 'Prepare a pose';
+    els.photoCaption.textContent = 'Deixe o look pronto e sorria.';
+    els.btnPhotoDownload.disabled = true;
+    els.photoResult.hidden = true;
+    els.photoResult.removeAttribute('src');
+    els.photoPreview.hidden = false;
+    els.photoPreview.innerHTML = '';
+    els.photoCount.textContent = '';
+    els.photoOverlay.classList.remove('is-ready');
+
+    const clone = createDollClone({ scopeIds: true });
+    clone.removeAttribute('role');
+    clone.removeAttribute('aria-label');
+    clone.setAttribute('aria-hidden', 'true');
+    clone.setAttribute('focusable', 'false');
+    clone.classList.add('photo-doll');
+    els.photoPreview.appendChild(clone);
+
+    playTap();
+    startPhotoCountdown(session);  }
+
+  function closePhotoStudio() {
+    if (els.photoOverlay.hidden) return;
+    state.photoSession += 1;
+    window.clearTimeout(state.photoTimer);
+    state.photoTimer = 0;
+    els.photoOverlay.classList.remove('is-open', 'is-ready');
+    setGameInert(false);
+    state.photoDataUrl = null;
+    playTap();
+
+    const finishClose = () => {
+      if (els.photoOverlay.classList.contains('is-open')) return;
+      els.photoOverlay.hidden = true;
+      els.photoPreview.innerHTML = '';
+      els.photoResult.hidden = true;
+      els.photoResult.removeAttribute('src');
+      els.photoCount.textContent = '';
+      els.photoCaption.textContent = 'Deixe o look pronto e sorria.';
+    };
+
+    if (prefersReducedMotion()) finishClose();
+    else window.setTimeout(finishClose, 200);
+
+    els.btnPhoto.focus({ preventScroll: true });
+  }
+
+  function downloadPhoto() {
+    if (!state.photoDataUrl) return;
+    triggerDownload(state.photoDataUrl, `meu-look-foto-${Date.now()}.png`);
+    els.photoCaption.textContent = 'Foto baixada!';
+    playPhotoReady();
+  }
+
+  function changeHairColor(colorId) {
+    if (colorId === state.hairColor) return;
+    pushHistory();
+    state.lookCount += 1;
+    applyHairColor(colorId, { announce: true });
+    updateControls();
+  }
+
+  function isStandalonePwa() {
+    return (
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      navigator.standalone === true
+    );
+  }
+
+  function isIosLike() {
+    const ua = navigator.userAgent || '';
+    const iPadDesktop = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+    return /iPad|iPhone|iPod/i.test(ua) || iPadDesktop;
+  }
+
+  function canUsePwa() {
+    return (
+      window.isSecureContext &&
+      (location.protocol === 'https:' || location.protocol === 'http:')
+    );
+  }
+
+  function updateInstallUi() {
+    if (!els.btnInstall) return;
+    const show = !isStandalonePwa() && canUsePwa() && (Boolean(deferredInstallPrompt) || isIosLike());
+    els.btnInstall.hidden = !show;
+  }
+
+  async function installPwa() {
+    if (deferredInstallPrompt) {
+      const promptEvent = deferredInstallPrompt;
+      deferredInstallPrompt = null;
+      try {
+        promptEvent.prompt();
+        const choice = await promptEvent.userChoice;
+        if (choice && choice.outcome === 'accepted') {
+          showToast('Instalando o aplicativo...', 'gold', 'i-install', 2200);
+        }
+      } catch (_) {
+        /* The browser may reject a stale install prompt. */
+      }
+      updateInstallUi();
+      return;
+    }
+
+    const message = isIosLike()
+      ? 'No Safari, toque em Compartilhar e depois em Adicionar à Tela de Início.'
+      : 'Abra o menu do navegador e escolha Instalar aplicativo.';
+    showToast(message, 'lilac', 'i-install', 4200);
+  }
+
+  function setupPwa() {
+    updateInstallUi();
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      updateInstallUi();
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      updateInstallUi();
+      playPhotoReady();
+      showToast('Aplicativo instalado!', 'gold', 'i-install', 2400);
+    });
+
+    if ('serviceWorker' in navigator && canUsePwa()) {
+      const register = () => {
+        navigator.serviceWorker.register('./sw.js').catch((error) => {
+          console.warn('Service worker não registrado:', error && error.message ? error.message : error);
+        });
+      };
+      if (document.readyState === 'complete') register();
+      else window.addEventListener('load', register, { once: true });
+    }
+  }
+
+  function handleGlobalKeydown(event) {
+    if (!els.photoOverlay.hidden && els.photoOverlay.classList.contains('is-open')) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closePhotoStudio();
+        return;
+      }
+      trapFocusInModal(event);
+      return;
+    }
+    if (!els.hairTray.hidden && event.key === 'Escape') {
+      event.preventDefault();
+      setHairTray(false);
+    }
+  }
+
+  function bindEvents() {
+    els.btnReset.addEventListener('click', resetGame);
+    els.btnUndo.addEventListener('click', undo);
+    els.btnRemove.addEventListener('click', removeAll);
+    els.btnRandom.addEventListener('click', randomLook);
+    els.btnRestore.addEventListener('click', restoreLook);
+    els.btnSave.addEventListener('click', saveLook);
+    els.btnNew.addEventListener('click', newLook);
+    els.btnInstall.addEventListener('click', installPwa);
+    els.btnPhoto.addEventListener('click', openPhotoStudio);
+    els.btnPhotoClose.addEventListener('click', closePhotoStudio);
+    els.btnPhotoCancel.addEventListener('click', closePhotoStudio);
+    els.btnPhotoDownload.addEventListener('click', downloadPhoto);
+    els.photoOverlay.addEventListener('click', (event) => {
+      if (event.target.closest('[data-close-photo]')) closePhotoStudio();
+    });
+
+    els.btnSound.addEventListener('click', () => {
+      const turningOn = !state.soundOn;
+      setSoundEnabled(turningOn, false);
+      if (turningOn) {
+        tone(660, { duration: 0.08, type: 'sine', volume: 0.03 });
+        tone(880, { duration: 0.12, delay: 0.07, type: 'sine', volume: 0.025 });
+        showToast('Sons ativados!', 'rose', 'i-volume', 1200);
+      } else {
+        showToast('Sons desativados.', 'lilac', 'i-volume-off', 1200);
+      }
+    });
+
+    els.btnHair.addEventListener('click', () => {
+      toggleHairTray();
+    });
+    els.btnHairClose.addEventListener('click', () => setHairTray(false));
+    els.hairSwatches.addEventListener('click', (event) => {
+      const button = event.target.closest('.hair-swatch');
+      if (!button) return;
+      changeHairColor(button.dataset.hair);
+    });
+
+    els.cats.forEach((button) => {
+      button.addEventListener('click', () => {
+        setFilter(button.dataset.filter, false);
+        playTap();
+      });
+    });
+
+    els.rail.addEventListener('pointerdown', onRailPointerDown);
+    els.rail.addEventListener('click', (event) => {
+      const card = event.target.closest('.item-card');
+      if (!card || !els.rail.contains(card)) return;
+      if (event.detail === 0) equipItem(byId.get(card.dataset.id), 'keyboard');
+    });
+    els.rail.addEventListener('contextmenu', (event) => {
+      if (event.target.closest('.item-card')) event.preventDefault();
+    });
+    els.rail.addEventListener('dragstart', (event) => event.preventDefault());
+    els.btnRailPrev.addEventListener('click', () => scrollRailBy(-1));
+    els.btnRailNext.addEventListener('click', () => scrollRailBy(1));
+    els.rail.addEventListener('scroll', updateRailNav, { passive: true });
+    els.rail.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      scrollRailBy(event.key === 'ArrowRight' ? 1 : -1);
+    });
+    els.rail.addEventListener('wheel', (event) => {
+      const maxScroll = Math.max(0, els.rail.scrollWidth - els.rail.clientWidth);
+      if (maxScroll <= 2) return;
+      if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+      event.preventDefault();
+      const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+      els.rail.scrollLeft += delta;
+    }, { passive: false });
+    window.addEventListener('resize', () => requestAnimationFrame(updateRailNav));
+
+    els.game.addEventListener('click', (event) => {
+      if (els.hairTray.hidden) return;
+      if (event.target.closest('#hairTray') || event.target.closest('#btnHair') || event.target.closest('#photoOverlay')) return;
+      setHairTray(false, { focus: false });
+    });
+
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerCancel);
+    window.addEventListener('blur', () => cancelPointerDrag(true));
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) cancelPointerDrag(true);
+    });
+    document.addEventListener('keydown', handleGlobalKeydown);
+  }
+
+  function init() {
+    const ids = new Set();
+    ITEMS.forEach((item) => {
+      if (ids.has(item.id)) throw new Error(`ID de peça duplicado: ${item.id}`);
+      ids.add(item.id);
+      if (!ZONES[item.zone]) throw new Error(`Zona inválida em ${item.id}: ${item.zone}`);
+    });
+    buildHairSwatches();
+    setSoundEnabled(true, false);
+    bindEvents();
+    setupPwa();
+    renderRail();
+    renderDoll();
+    updateControls();
+    updateClosetCount();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
